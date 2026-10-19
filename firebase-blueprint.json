@@ -1,0 +1,104 @@
+{
+  "entities": {
+    "ProjectRequest": {
+      "title": "Project Request",
+      "description": "A request for a new construction or design project submitted via the discovery modal.",
+      "type": "object",
+      "properties": {
+        "projectType": { "type": "string", "description": "Type of project (commercial, residential, etc.)" },
+        "service": { "type": "string", "description": "Scope of service requested" },
+        "location": { "type": "string", "description": "Project location in PNG" },
+        "budget": { "type": "string", "description": "Estimated budget range" },
+        "name": { "type": "string", "description": "User's full name" },
+        "email": { "type": "string", "description": "User's email address" },
+        "phone": { "type": "string", "description": "User's phone number" },
+        "status": { "type": "string", "enum": ["pending", "reviewed", "contacted"], "description": "Status of the request" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp of submission" }
+      },
+      "required": ["projectType", "service", "location", "budget", "name", "email", "createdAt"]
+    },
+    "ContactMessage": {
+      "title": "Contact Message",
+      "description": "A general inquiry message submitted via the contact form.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "User's full name" },
+        "email": { "type": "string", "description": "User's email address" },
+        "subject": { "type": "string", "description": "Subject of the message" },
+        "message": { "type": "string", "description": "The message content" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp of submission" }
+      },
+      "required": ["name", "email", "message", "createdAt"]
+    },
+    "CostEstimate": {
+      "title": "Cost Estimate",
+      "description": "A saved construction cost estimate calculation.",
+      "type": "object",
+      "properties": {
+        "projectType": { "type": "string", "enum": ["residential", "commercial", "renovation"] },
+        "floorArea": { "type": "number", "description": "Area in sqm" },
+        "floors": { "type": "number" },
+        "materialQuality": { "type": "string", "enum": ["standard", "premium", "luxury"] },
+        "locationFactor": { "type": "string", "enum": ["urban", "rural", "remote"] },
+        "projectDuration": { "type": "number", "description": "Duration in weeks" },
+        "totalCost": { "type": "number" },
+        "breakdown": {
+          "type": "object",
+          "properties": {
+            "materials": { "type": "number" },
+            "labor": { "type": "number" },
+            "contingency": { "type": "number" }
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "userId": { "type": "string", "description": "UID of the user who saved it" }
+      },
+      "required": ["projectType", "floorArea", "floors", "materialQuality", "locationFactor", "totalCost", "createdAt"]
+    },
+    "DesignRecommendation": {
+      "title": "Design Recommendation",
+      "description": "A saved design recommendation result from the Smart Design Selector Tool.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "UID of the user who saved it" },
+        "inputs": {
+          "type": "object",
+          "properties": {
+            "budget": { "type": "string" },
+            "landSize": { "type": "number" },
+            "familySize": { "type": "number" },
+            "style": { "type": "string" }
+          }
+        },
+        "recommendations": {
+          "type": "object",
+          "properties": {
+            "houseType": { "type": "string" },
+            "layout": { "type": "string" },
+            "material": { "type": "string" }
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "inputs", "recommendations", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/projectRequests/{requestId}": {
+      "schema": "ProjectRequest",
+      "description": "Collection of project discovery requests"
+    },
+    "/contactMessages/{messageId}": {
+      "schema": "ContactMessage",
+      "description": "Collection of general contact inquiries"
+    },
+    "/costEstimates/{estimateId}": {
+      "schema": "CostEstimate",
+      "description": "Collection of saved cost estimates"
+    },
+    "/designRecommendations/{recommendationId}": {
+      "schema": "DesignRecommendation",
+      "description": "Collection of saved design recommendations"
+    }
+  }
+}
