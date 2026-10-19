@@ -1,6 +1,6 @@
 import { Facebook, Twitter, Linkedin, Instagram, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { PRIMARY_WHATSAPP_NUMBER, DISPLAY_WHATSAPP, buildWhatsAppLink, buildMailtoLink, PRIMARY_EMAIL, SECONDARY_EMAIL } from '@/lib/communicationLinks';
+import { PRIMARY_WHATSAPP_NUMBER, DISPLAY_WHATSAPP, DISPLAY_PHONE, buildWhatsAppLink, buildMailtoLink, PRIMARY_EMAIL, SECONDARY_EMAIL } from '@/lib/communicationLinks';
 
 export default function Footer() {
   return (
@@ -72,7 +72,7 @@ export default function Footer() {
               <li className="flex flex-col">
                 <span className="font-bold text-foreground mb-1">Phone &amp; WhatsApp:</span>
                 <span className="text-xs text-muted-foreground">WhatsApp: <strong className="text-foreground">{DISPLAY_WHATSAPP}</strong></span>
-                <span className="text-xs text-muted-foreground">Phone: (675) 7061 9746 / 7313 9744</span>
+                <span className="text-xs text-muted-foreground">Phone: {DISPLAY_PHONE}</span>
                 <a
                   href={buildWhatsAppLink("Hi Techtural BuiltIn, I would like to inquire about your smart construction and architectural services.", PRIMARY_WHATSAPP_NUMBER)}
                   target="_blank"

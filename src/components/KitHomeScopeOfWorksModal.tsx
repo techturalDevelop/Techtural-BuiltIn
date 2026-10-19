@@ -329,7 +329,7 @@ export function KitHomeScopeOfWorksModal({
               <div>
                 <label className="text-[11px] font-medium text-muted-foreground block mb-1">Phone / WhatsApp Number</label>
                 <Input
-                  placeholder="e.g. +675 7061 9746"
+                  placeholder="e.g. +675 7313 9744"
                   value={clientPhone}
                   onChange={(e) => setClientPhone(e.target.value)}
                   className="rounded-xl h-10 text-xs"

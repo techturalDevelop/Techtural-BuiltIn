@@ -120,12 +120,10 @@ const professionalServiceLinks = [
   },
 ];
 
-const techLinks = [
-  { name: 'Design Selector', href: '/design-selector', description: 'AI-driven house design recommendations' },
+const techLinks: { name: string; href: string; description: string; badge?: string }[] = [
+  { name: 'Design Selector', href: '/design-selector', description: 'AI-driven house design recommendations', badge: 'Coming Soon' },
   { name: 'Estimator', href: '/estimator', description: 'Project cost & material calculator' },
   { name: 'Timeline', href: '/timeline', description: 'Interactive project scheduling' },
-  { name: 'Visual Impact', href: '/visual-impact', description: 'Before & after transformations' },
-  { name: 'Project Map', href: '/map', description: 'Interactive project footprint' },
   { name: 'Tech Stack', href: '/#technology', description: 'Our core technological foundation' },
 ];
 
@@ -377,7 +375,14 @@ export default function Navbar() {
                       <Cpu size={14} />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-foreground">{link.name}</p>
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-sm font-bold text-foreground">{link.name}</p>
+                        {link.badge && (
+                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 uppercase tracking-wider">
+                            {link.badge}
+                          </span>
+                        )}
+                      </div>
                       <p className="text-[10px] text-muted-foreground leading-tight">{link.description}</p>
                     </div>
                   </HashLink>
@@ -604,7 +609,14 @@ export default function Navbar() {
                         <Cpu size={16} />
                       </div>
                       <div>
-                        <p className="text-xs font-bold">{link.name}</p>
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-xs font-bold">{link.name}</p>
+                          {link.badge && (
+                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 uppercase tracking-wider">
+                              {link.badge}
+                            </span>
+                          )}
+                        </div>
                         <p className="text-[10px] text-muted-foreground">{link.description}</p>
                       </div>
                     </HashLink>

@@ -25,8 +25,11 @@ export const KIT_HOME_FINISH_OPTIONS: FinishOption[] = [
     image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M01a%20(1).png',
     modelSpecificImages: {
       'tb-spl1b-m1': 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M01a%20(1).png',
+      'tb-ses1b-m2': 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M02a%20(1).png',
       'tb-cpl2b-m2': 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M02a%20(1).png',
+      'tb-hc1b-m3': 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M03a.png',
       'tb-epl2b-m3': 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M03a.png',
+      'tb-ch1b-m4': 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M01a%20(1).png',
       'tb-tpl3b-m4': 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M01a%20(1).png',
       '1': 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M01a%20(1).png',
       '2': 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M02a%20(1).png',
@@ -66,8 +69,11 @@ export const KIT_HOME_FINISH_OPTIONS: FinishOption[] = [
     image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M01b%20(1).png',
     modelSpecificImages: {
       'tb-spl1b-m1': 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M01b%20(1).png',
+      'tb-ses1b-m2': 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M02a.png',
       'tb-cpl2b-m2': 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M02a.png',
+      'tb-hc1b-m3': 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M03b.png',
       'tb-epl2b-m3': 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M03b.png',
+      'tb-ch1b-m4': 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M01b%20(1).png',
       'tb-tpl3b-m4': 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M01b%20(1).png',
       '1': 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M01b%20(1).png',
       '2': 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Standard%20Kitchen%20Fitouts/TB-KF-M02a.png',

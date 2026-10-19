@@ -80,9 +80,9 @@ export default function Technology() {
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-4">
                   <img 
-                    src="https://res.cloudinary.com/dfsrntbpd/image/upload/v1756095062/QuantyPro24_nedwwz.png" 
+                    src="https://pub-3a05e821f38849e6bfc8d19b810721c6.r2.dev/QuantyPros%20logo%20icons%20on%20transparent%20background1.png" 
                     alt="QuantyPros Logo" 
-                    className="h-10 w-auto"
+                    className="h-10 w-auto object-contain"
                     referrerPolicy="no-referrer"
                   />
                   <h3 className="text-2xl font-bold font-heading">QuantyPros</h3>

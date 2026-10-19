@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
@@ -12,15 +12,15 @@ import Services from '@/components/Services';
 import Portfolio from '@/components/Portfolio';
 import WorkspaceTools from '@/components/WorkspaceTools';
 import Technology from '@/components/Technology';
-import Testimonials from '@/components/Testimonials';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 import ScrollToTop from '@/components/ScrollToTop';
 import ProjectsPage from '@/pages/ProjectsPage';
 import EstimatorPage from '@/pages/EstimatorPage';
 import TimelinePage from '@/pages/TimelinePage';
-import VisualImpactPage from '@/pages/VisualImpactPage';
-import MapPage from '@/pages/MapPage';
+// Visual Impact and Map temporarily hidden until functions are updated
+// import VisualImpactPage from '@/pages/VisualImpactPage';
+// import MapPage from '@/pages/MapPage';
 import DesignSelectorPage from '@/pages/DesignSelectorPage';
 import KitHomesPage from '@/pages/KitHomesPage';
 import DesignProductsPage from '@/pages/DesignProductsPage';
@@ -38,7 +38,7 @@ function HomePage() {
       <WorkspaceTools />
       <Portfolio />
       <Technology />
-      <Testimonials />
+      {/* Testimonials temporarily hidden until content is updated */}
       <Contact />
     </>
   );
@@ -56,8 +56,9 @@ export default function App() {
               <Route path="/projects" element={<ProjectsPage />} />
               <Route path="/estimator" element={<EstimatorPage />} />
               <Route path="/timeline" element={<TimelinePage />} />
-              <Route path="/visual-impact" element={<VisualImpactPage />} />
-              <Route path="/map" element={<MapPage />} />
+              {/* Visual Impact and Project Map temporarily hidden until functions are updated */}
+              <Route path="/visual-impact" element={<Navigate to="/" replace />} />
+              <Route path="/map" element={<Navigate to="/projects" replace />} />
               <Route path="/design-selector" element={<DesignSelectorPage />} />
               <Route path="/kit-homes" element={<KitHomesPage />} />
               <Route path="/services" element={<ServicesPage />} />

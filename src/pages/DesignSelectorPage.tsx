@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Link } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 import { 
   ChevronRight, 
   ChevronLeft, 
@@ -16,7 +18,14 @@ import {
   Sparkles,
   Box,
   HelpCircle,
-  ArrowRight
+  ArrowRight,
+  Eye,
+  EyeOff,
+  Wrench,
+  Clock,
+  CheckCircle2,
+  AlertTriangle,
+  Building2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -75,6 +84,7 @@ export default function DesignSelectorPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [visualizerInitialConfig, setVisualizerInitialConfig] = useState<any>(null);
+  const [showPrototypePreview, setShowPrototypePreview] = useState(false);
 
   const handleNext = () => {
     if (currentStep < steps.length) {
@@ -160,54 +170,183 @@ export default function DesignSelectorPage() {
     <div className="min-h-screen pt-32 pb-20 px-4 sm:px-6 bg-background">
       <div className="max-w-6xl mx-auto space-y-8">
         
-        {/* Header */}
-        <div className="text-center space-y-4 max-w-3xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase border border-primary/20"
-          >
-            <Sparkles size={14} />
-            Architectural Design Intelligence
-          </motion.div>
-          <h1 className="text-4xl md:text-5xl font-heading font-bold tracking-tight">
-            Design & Visualize Your <span className="text-primary">Container & Kit Home</span>
-          </h1>
-          <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-            Choose between generating custom photorealistic 3D container home renders using AI, or using our interactive guided requirement selector to find your ideal home layout.
-          </p>
+        {/* COMING SOON NOTICE HERO CARD */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative rounded-3xl border-2 border-amber-500/30 bg-gradient-to-br from-amber-500/10 via-background to-primary/5 p-6 sm:p-10 shadow-xl overflow-hidden"
+        >
+          {/* Ambient background decoration */}
+          <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+          <div className="absolute bottom-0 left-0 w-60 h-60 bg-primary/5 rounded-full blur-2xl pointer-events-none -ml-10 -mb-10" />
 
-          {/* Mode Switcher Tabs */}
-          <div className="inline-flex p-1.5 rounded-2xl bg-muted/70 border border-border mt-4 shadow-xs">
-            <button
-              onClick={() => setActiveTab('visualizer')}
-              className={cn(
-                "flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all",
-                activeTab === 'visualizer'
-                  ? "bg-primary text-white shadow-md shadow-primary/20"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <Sparkles size={16} />
-              AI 3D Container Visualizer
-            </button>
-            <button
-              onClick={() => setActiveTab('wizard')}
-              className={cn(
-                "flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all",
-                activeTab === 'wizard'
-                  ? "bg-primary text-white shadow-md shadow-primary/20"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <HelpCircle size={16} />
-              Design Recommender Quiz
-            </button>
+          <div className="relative z-10 space-y-6">
+            {/* Status Header Badge */}
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-bold uppercase tracking-wider">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                </span>
+                Coming Soon • Module Notice
+              </div>
+
+              <span className="text-xs font-mono font-medium text-muted-foreground bg-muted/60 px-3 py-1 rounded-lg border border-border/60">
+                Status: In Engineering &amp; Feature Implementation
+              </span>
+            </div>
+
+            {/* Headline and Narrative */}
+            <div className="space-y-3 max-w-3xl">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-heading font-extrabold tracking-tight text-foreground">
+                Design Selector &amp; AI Recommender Engine
+              </h1>
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                <strong>Notice:</strong> We are currently updating, engineering, and calibrating the automated architectural configuration algorithms, multi-parameter PNG site &amp; climate matching engines, and AI generative visualizers for this module. Full interactive functions will be activated for use once features are fully built and implemented.
+              </p>
+            </div>
+
+            {/* Upcoming Capabilities Roadmap Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+              <div className="p-4 rounded-2xl bg-card/90 border border-border/70 shadow-xs space-y-2">
+                <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
+                  <Sparkles size={20} />
+                </div>
+                <h4 className="text-sm font-bold text-foreground">AI 3D Generative Visualizer</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Generates customized photorealistic 3D container and kitset exterior perspective renders.
+                </p>
+                <div className="pt-1">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-600 dark:text-amber-400">
+                    <Clock size={11} /> Model Fine-Tuning
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-card/90 border border-border/70 shadow-xs space-y-2">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+                  <Layout size={20} />
+                </div>
+                <h4 className="text-sm font-bold text-foreground">Spatial &amp; Family Matching</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Automated layout calculations mapped to family occupants, room zones, and functional needs.
+                </p>
+                <div className="pt-1">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-600 dark:text-amber-400">
+                    <Clock size={11} /> Algorithm Calibration
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-card/90 border border-border/70 shadow-xs space-y-2">
+                <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
+                  <Layers size={20} />
+                </div>
+                <h4 className="text-sm font-bold text-foreground">PNG Climate Adaptation</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Provincial topography, cyclonic wind ratings, and tropical rainfall roofing compliance.
+                </p>
+                <div className="pt-1">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-600 dark:text-amber-400">
+                    <Clock size={11} /> Engineering Ruleset
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-card/90 border border-border/70 shadow-xs space-y-2">
+                <div className="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold">
+                  <Wallet size={20} />
+                </div>
+                <h4 className="text-sm font-bold text-foreground">QuantyPros Live Cost Sync</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Instant synchronization with certified BOQ costing schedules and material procurement fees.
+                </p>
+                <div className="pt-1">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-600 dark:text-amber-400">
+                    <Clock size={11} /> Pipeline Integration
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Actions & Navigation to Active Tools */}
+            <div className="pt-4 border-t border-border/60 flex flex-wrap items-center justify-between gap-4">
+              <div className="flex flex-wrap items-center gap-3">
+                <Link to="/products?tab=residential-kit-homes">
+                  <Button className="rounded-xl h-11 px-5 font-bold shadow-md shadow-primary/20">
+                    Browse Kit Homes Catalogue (20 Models)
+                    <ArrowRight size={16} className="ml-1.5" />
+                  </Button>
+                </Link>
+                <Link to="/estimator">
+                  <Button variant="outline" className="rounded-xl h-11 px-5 font-bold border-border hover:bg-muted">
+                    Launch Cost Estimator
+                  </Button>
+                </Link>
+                <HashLink smooth to="/#contact">
+                  <Button variant="ghost" className="rounded-xl h-11 px-4 font-semibold text-muted-foreground hover:text-foreground">
+                    Inquire With Design Team
+                  </Button>
+                </HashLink>
+              </div>
+
+              {/* Prototype Preview Toggle */}
+              <button
+                onClick={() => setShowPrototypePreview(prev => !prev)}
+                className="inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground hover:text-primary transition-colors cursor-pointer bg-background/60 hover:bg-background px-3 py-2 rounded-xl border border-border/60"
+              >
+                <span>{showPrototypePreview ? 'Hide Development Sandbox' : 'Inspect Prototype Sandbox'}</span>
+                {showPrototypePreview ? <EyeOff size={14} /> : <Eye size={14} />}
+              </button>
+            </div>
           </div>
-        </div>
+        </motion.div>
+
+        {/* Prototype Sandbox Section (Only rendered when toggled) */}
+        {showPrototypePreview && (
+          <div className="space-y-6 pt-4 border-t border-dashed border-border/80">
+            {/* Sandbox Notice Banner */}
+            <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-3">
+              <AlertTriangle className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" size={18} />
+              <div className="text-xs text-amber-900 dark:text-amber-200 leading-relaxed">
+                <strong className="font-bold">Development Sandbox Preview:</strong> Functions and generative algorithms in this sandbox are currently undergoing engineering calibration. Live interactive capabilities will be activated once development and verification are complete.
+              </div>
+            </div>
+
+            {/* Mode Switcher Tabs */}
+            <div className="flex justify-center">
+              <div className="inline-flex p-1.5 rounded-2xl bg-muted/70 border border-border shadow-xs">
+                <button
+                  onClick={() => setActiveTab('visualizer')}
+                  className={cn(
+                    "flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all",
+                    activeTab === 'visualizer'
+                      ? "bg-primary text-white shadow-md shadow-primary/20"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  <Sparkles size={16} />
+                  AI 3D Container Visualizer (Preview)
+                </button>
+                <button
+                  onClick={() => setActiveTab('wizard')}
+                  className={cn(
+                    "flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all",
+                    activeTab === 'wizard'
+                      ? "bg-primary text-white shadow-md shadow-primary/20"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  <HelpCircle size={16} />
+                  Design Recommender Quiz (Preview)
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Tab 1: AI 3D Container Visualizer */}
-        {activeTab === 'visualizer' && (
+        {showPrototypePreview && activeTab === 'visualizer' && (
           <motion.div
             key="tab-visualizer"
             initial={{ opacity: 0, y: 15 }}
@@ -219,7 +358,7 @@ export default function DesignSelectorPage() {
         )}
 
         {/* Tab 2: Guided Requirement Quiz */}
-        {activeTab === 'wizard' && (
+        {showPrototypePreview && activeTab === 'wizard' && (
           <motion.div
             key="tab-wizard"
             initial={{ opacity: 0, y: 15 }}

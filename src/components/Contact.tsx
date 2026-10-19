@@ -140,7 +140,7 @@ export default function Contact() {
                     </span>
                   </div>
                   <p className="text-muted-foreground font-medium mt-0.5">
-                    WhatsApp: <span className="font-bold text-foreground">{DISPLAY_WHATSAPP}</span> | Phone: (675) 7061 9746 / 7313 9744
+                    WhatsApp: <span className="font-bold text-foreground">{DISPLAY_WHATSAPP}</span> | Phone: (675) 7313 9744
                   </p>
                   <div className="flex flex-wrap gap-2 mt-2.5">
                     <a
@@ -153,20 +153,12 @@ export default function Contact() {
                       <span>Main WhatsApp ({DISPLAY_WHATSAPP})</span>
                     </a>
                     <a
-                      href={buildWhatsAppLink("Hi Techtural BuiltIn team, I would like to make an inquiry.", SECONDARY_WHATSAPP_NUMBER)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-muted hover:bg-muted/80 text-foreground text-xs font-medium border border-border transition-colors"
-                    >
-                      <span>Alt (+675 7061 9746)</span>
-                    </a>
-                    <a
                       href={buildWhatsAppLink("Hi Techtural BuiltIn team, I would like to make an inquiry.", TERTIARY_WHATSAPP_NUMBER)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-muted hover:bg-muted/80 text-foreground text-xs font-medium border border-border transition-colors"
                     >
-                      <span>Line 3 (+675 7313 9744)</span>
+                      <span>Alt Line (+675 7313 9744)</span>
                     </a>
                   </div>
                 </div>

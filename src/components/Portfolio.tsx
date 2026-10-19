@@ -395,14 +395,8 @@ export default function Portfolio() {
             viewport={{ once: true }}
             className="flex gap-4"
           >
-            <Link to="/map">
-              <Badge variant="outline" className="px-4 py-1 text-sm rounded-full cursor-pointer hover:bg-primary hover:text-white transition-colors flex items-center gap-2">
-                <MapPin size={14} />
-                View Interactive Map
-              </Badge>
-            </Link>
             <Link to="/projects">
-              <Badge variant="outline" className="px-4 py-1 text-sm rounded-full cursor-pointer hover:bg-primary hover:text-white transition-colors">
+              <Badge variant="outline" className="px-4 py-1.5 text-sm rounded-full cursor-pointer hover:bg-primary hover:text-white transition-colors">
                 View All Projects
               </Badge>
             </Link>

@@ -34,7 +34,7 @@ const tools = [
     icon: Sparkles,
     color: 'bg-blue-500',
     link: '/design-selector',
-    status: 'Active'
+    status: 'Coming Soon'
   },
   {
     id: 'estimator',
@@ -52,15 +52,6 @@ const tools = [
     icon: Clock,
     color: 'bg-purple-500',
     link: '/timeline',
-    status: 'Active'
-  },
-  {
-    id: 'visual-impact',
-    title: 'Visual Impact',
-    description: 'Experience before-and-after project transformations with our interactive slider.',
-    icon: Box,
-    color: 'bg-indigo-500',
-    link: '/visual-impact',
     status: 'Active'
   }
 ];
@@ -105,7 +96,7 @@ export default function WorkspaceTools() {
           </motion.div>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-3 gap-6">
           {tools.map((tool, index) => (
             <motion.div
               key={tool.id}
@@ -125,8 +116,12 @@ export default function WorkspaceTools() {
                 
                 <div className="mb-4">
                   <span className={cn(
-                    "text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full",
-                    tool.status === 'Active' ? "bg-emerald-100 text-emerald-700" : "bg-muted text-muted-foreground"
+                    "text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full",
+                    tool.status === 'Active' 
+                      ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20" 
+                      : tool.status === 'Coming Soon'
+                        ? "bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30"
+                        : "bg-muted text-muted-foreground"
                   )}>
                     {tool.status}
                   </span>
@@ -139,19 +134,12 @@ export default function WorkspaceTools() {
                   {tool.description}
                 </p>
 
-                {tool.status === 'Active' ? (
-                  <Link to={tool.link}>
-                    <Button variant="ghost" className="w-full justify-between group/btn rounded-xl hover:bg-primary hover:text-white transition-all">
-                      Open Tool
-                      <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
-                    </Button>
-                  </Link>
-                ) : (
-                  <Button disabled variant="ghost" className="w-full justify-between rounded-xl opacity-50">
-                    Coming Soon
-                    <Zap size={16} />
+                <Link to={tool.link}>
+                  <Button variant="ghost" className="w-full justify-between group/btn rounded-xl hover:bg-primary hover:text-white transition-all">
+                    {tool.status === 'Coming Soon' ? 'View Coming Soon Notice' : 'Open Tool'}
+                    <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
                   </Button>
-                )}
+                </Link>
               </div>
             </motion.div>
           ))}

@@ -1,14 +1,14 @@
 /**
  * Utility functions for direct WhatsApp and Email communication links across Techtural BuiltIn.
- * Primary contact phone in contact form: (675) 7061 9746 / 7313 9744
+ * Primary contact phone in contact form: (675) 7313 9744
  * Primary email addresses: techtural782@gmail.com / gerea.george@techturalpng.com
  */
 
 export const PRIMARY_WHATSAPP_NUMBER = '67581464661'; // International format without leading + or symbols
-export const SECONDARY_WHATSAPP_NUMBER = '67570619746';
+export const SECONDARY_WHATSAPP_NUMBER = '67573139744';
 export const TERTIARY_WHATSAPP_NUMBER = '67573139744';
 export const DISPLAY_WHATSAPP = '+675 8146 4661';
-export const DISPLAY_PHONE = '(675) 7061 9746 / 7313 9744';
+export const DISPLAY_PHONE = '(675) 7313 9744';
 export const PRIMARY_EMAIL = 'techtural782@gmail.com';
 export const SECONDARY_EMAIL = 'gerea.george@techturalpng.com';
 
