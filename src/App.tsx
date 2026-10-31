@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import Navbar from '@/components/Navbar';
@@ -15,6 +16,10 @@ import Technology from '@/components/Technology';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 import ScrollToTop from '@/components/ScrollToTop';
+import OfflineIndicator from '@/components/OfflineIndicator';
+import MaintenanceNotice from '@/components/MaintenanceNotice';
+import { MAINTENANCE_CONFIG, isMaintenanceBypassed, setMaintenanceBypass } from '@/config/maintenanceConfig';
+import { Eye, Lock } from 'lucide-react';
 import ProjectsPage from '@/pages/ProjectsPage';
 import EstimatorPage from '@/pages/EstimatorPage';
 import TimelinePage from '@/pages/TimelinePage';
@@ -45,9 +50,41 @@ function HomePage() {
 }
 
 export default function App() {
+  const [isBypassed, setIsBypassed] = useState(() => isMaintenanceBypassed());
+
+  const handleExitPreview = () => {
+    setMaintenanceBypass(false);
+    setIsBypassed(false);
+  };
+
+  // If Maintenance Mode is enabled and user is not in admin preview bypass
+  if (MAINTENANCE_CONFIG.enabled && !isBypassed) {
+    return (
+      <ErrorBoundary>
+        <MaintenanceNotice onBypass={() => setIsBypassed(true)} />
+        <OfflineIndicator />
+      </ErrorBoundary>
+    );
+  }
+
   return (
     <Router>
       <ErrorBoundary>
+        {MAINTENANCE_CONFIG.enabled && isBypassed && (
+          <div className="bg-amber-500 text-slate-950 px-4 py-2 text-xs font-semibold flex flex-wrap items-center justify-between gap-2 sticky top-0 z-50 shadow-md">
+            <div className="flex items-center gap-2">
+              <Eye size={15} className="shrink-0" />
+              <span>Admin Preview Active — Website is currently displaying the Maintenance Notice to all public visitors.</span>
+            </div>
+            <button
+              onClick={handleExitPreview}
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-slate-950 text-amber-300 hover:text-white text-[11px] font-bold cursor-pointer transition-colors shadow-xs"
+            >
+              <Lock size={12} />
+              <span>Exit Preview &amp; Re-lock Notice</span>
+            </button>
+          </div>
+        )}
         <div className="min-h-screen bg-background font-sans selection:bg-primary/20 selection:text-primary flex flex-col justify-between">
           <Navbar />
           <main className="flex-grow">
@@ -80,6 +117,7 @@ export default function App() {
           </main>
           <Footer />
           <ScrollToTop />
+          <OfflineIndicator />
         </div>
       </ErrorBoundary>
     </Router>

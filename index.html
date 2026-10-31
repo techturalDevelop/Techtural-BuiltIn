@@ -4,7 +4,78 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Techtural BuiltIn Web Page</title>
-    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dfsrntbpd/image/upload/v1766041778/techtural_builtin_logo25_we1od8.png" />
+    <meta name="description" content="Smart Architectural & Construction Solutions in Papua New Guinea — Kit Homes, BOQ Estimation & Digital Project Management." />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Techtural" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" href="https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/Techtural%20BuiltIn%20Logo/techtural%20builtin_logo25.png" />
+    <script>
+      (function() {
+        if (typeof window !== 'undefined') {
+          var NativeWebSocket = window.WebSocket;
+          if (NativeWebSocket) {
+            function ViteHMRMockSocket() {
+              var target = new EventTarget();
+              target.readyState = 1;
+              target.protocol = 'vite-hmr';
+              target.extensions = '';
+              target.bufferedAmount = 0;
+              target.send = function() {};
+              target.close = function() {
+                target.readyState = 3;
+                try {
+                  target.dispatchEvent(new Event('close'));
+                } catch (_) {}
+              };
+              setTimeout(function() {
+                try {
+                  target.dispatchEvent(new Event('open'));
+                } catch (_) {}
+              }, 10);
+              return target;
+            }
+
+            window.WebSocket = function(url, protocols) {
+              var isViteHmr =
+                (typeof protocols === 'string' && protocols === 'vite-hmr') ||
+                (Array.isArray(protocols) && protocols.indexOf('vite-hmr') !== -1) ||
+                (typeof url === 'string' && (url.indexOf('vite-hmr') !== -1 || url.indexOf('/@vite/') !== -1));
+
+              if (isViteHmr) {
+                return ViteHMRMockSocket();
+              }
+              return new NativeWebSocket(url, protocols);
+            };
+
+            window.WebSocket.prototype = NativeWebSocket.prototype;
+            window.WebSocket.CONNECTING = 0;
+            window.WebSocket.OPEN = 1;
+            window.WebSocket.CLOSING = 2;
+            window.WebSocket.CLOSED = 3;
+          }
+
+          window.addEventListener('unhandledrejection', function(event) {
+            var reason = event && event.reason && (event.reason.message || String(event.reason));
+            if (reason && (reason.indexOf('WebSocket') !== -1 || reason.indexOf('vite:ws') !== -1)) {
+              event.preventDefault();
+              event.stopImmediatePropagation();
+            }
+          }, true);
+
+          window.addEventListener('error', function(event) {
+            var msg = (event && event.message) || '';
+            if (msg.indexOf('WebSocket') !== -1 || msg.indexOf('vite:ws') !== -1) {
+              event.preventDefault();
+              event.stopImmediatePropagation();
+              return true;
+            }
+          }, true);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

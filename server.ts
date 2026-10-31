@@ -36,6 +36,131 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// In-memory store for portal inquiries & consultation requests
+interface StoredInquiry {
+  id: string;
+  type: 'contact_message' | 'project_consultation';
+  name: string;
+  email: string;
+  phone?: string;
+  subject?: string;
+  message?: string;
+  projectType?: string;
+  service?: string;
+  location?: string;
+  budget?: string;
+  details?: any;
+  status: 'new' | 'reviewed' | 'contacted';
+  receivedAt: string;
+}
+
+const inMemoryInquiries: StoredInquiry[] = [
+  {
+    id: 'req-init-01',
+    type: 'project_consultation',
+    name: 'George Vele',
+    email: 'g.vele@example.com.pg',
+    phone: '+675 7234 5678',
+    projectType: 'residential',
+    service: 'Full Turnkey Construction - Kit Home Haus Kumul (TB-SPL1B-01)',
+    location: 'Port Moresby (Waigani)',
+    budget: 'K500k - K2M',
+    status: 'reviewed',
+    receivedAt: new Date(Date.now() - 3600000 * 24).toISOString()
+  },
+  {
+    id: 'msg-init-02',
+    type: 'contact_message',
+    name: 'Sarah Kuman',
+    email: 'sarah.k@miningpng.com',
+    phone: '+675 7198 2345',
+    subject: 'Commercial Office Space & Warehouse Tender',
+    message: 'We are seeking certified architectural drawings and quantity surveying for a 2-storey office and storage facility in Lae Morobe Province.',
+    status: 'new',
+    receivedAt: new Date(Date.now() - 3600000 * 6).toISOString()
+  }
+];
+
+// POST /api/contact-message (Portal Inbox fallback)
+app.post('/api/contact-message', (req, res) => {
+  try {
+    const { name, email, subject, message, phone } = req.body;
+    if (!name || !email || !message) {
+      return res.status(400).json({ error: 'Name, email, and message are required' });
+    }
+
+    const record: StoredInquiry = {
+      id: `msg-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      type: 'contact_message',
+      name: String(name).trim(),
+      email: String(email).trim().toLowerCase(),
+      phone: phone ? String(phone).trim() : undefined,
+      subject: subject ? String(subject).trim() : 'General Project Inquiry',
+      message: String(message).trim(),
+      status: 'new',
+      receivedAt: new Date().toISOString()
+    };
+
+    inMemoryInquiries.unshift(record);
+    console.log(`[PORTAL INBOX] New Contact Message received from ${record.name} (${record.email}) - "${record.subject}"`);
+
+    return res.status(200).json({
+      success: true,
+      id: record.id,
+      message: 'Contact message successfully received and registered in Portal Inbox.'
+    });
+  } catch (err: any) {
+    console.error('Error in /api/contact-message:', err);
+    return res.status(500).json({ error: 'Failed to process contact message.' });
+  }
+});
+
+// POST /api/project-request (Consultation Desk fallback)
+app.post('/api/project-request', (req, res) => {
+  try {
+    const { name, email, phone, projectType, service, location, budget, details } = req.body;
+    if (!name || !email) {
+      return res.status(400).json({ error: 'Name and email are required' });
+    }
+
+    const record: StoredInquiry = {
+      id: `req-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      type: 'project_consultation',
+      name: String(name).trim(),
+      email: String(email).trim().toLowerCase(),
+      phone: phone ? String(phone).trim() : 'Not provided',
+      projectType: projectType || 'residential',
+      service: service || 'Full Turnkey Construction',
+      location: location || 'Port Moresby',
+      budget: budget || 'Custom Budget',
+      details: details || null,
+      status: 'new',
+      receivedAt: new Date().toISOString()
+    };
+
+    inMemoryInquiries.unshift(record);
+    console.log(`[PROJECT DESK] New Consultation Request from ${record.name} (${record.email}) - Service: ${record.service}`);
+
+    return res.status(200).json({
+      success: true,
+      id: record.id,
+      message: 'Consultation request successfully received and registered in Project Desk.'
+    });
+  } catch (err: any) {
+    console.error('Error in /api/project-request:', err);
+    return res.status(500).json({ error: 'Failed to process consultation request.' });
+  }
+});
+
+// GET /api/inquiries (View inquiries and consultation requests)
+app.get('/api/inquiries', (req, res) => {
+  return res.status(200).json({
+    success: true,
+    total: inMemoryInquiries.length,
+    inquiries: inMemoryInquiries
+  });
+});
+
 // Helper to run promise with timeout
 function withTimeout<T>(promise: Promise<T>, ms: number, fallbackValue: T): Promise<T> {
   return Promise.race([
@@ -303,8 +428,12 @@ Return ONLY valid JSON.`;
 async function startServer() {
   // Vite middleware in development
   if (process.env.NODE_ENV !== 'production') {
+    const isHmrDisabled = process.env.DISABLE_HMR !== 'false';
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: { 
+        middlewareMode: true,
+        hmr: isHmrDisabled ? false : undefined,
+      },
       appType: 'spa',
     });
     app.use(vite.middlewares);

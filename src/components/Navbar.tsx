@@ -21,7 +21,8 @@ import {
   Calculator,
   ShieldCheck,
   ArrowRight,
-  GraduationCap
+  GraduationCap,
+  Lock
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -30,6 +31,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { auth, signInWithGoogle, logout } from '@/lib/firebase';
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 import { toast } from 'sonner';
+import PWAInstallButton from '@/components/PWAInstallButton';
 
 import { Link, useLocation } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
@@ -143,21 +145,10 @@ export default function Navbar() {
     return () => unsubscribe();
   }, []);
 
-  const handleLogin = async () => {
-    try {
-      const user = await signInWithGoogle();
-      if (user) {
-        toast.success('Signed in successfully');
-      } else {
-        toast.info('Sign in cancelled');
-      }
-    } catch (error: any) {
-      if (error && (error.code === 'auth/popup-closed-by-user' || String(error.message || '').includes('popup-closed-by-user'))) {
-        toast.info('Sign in cancelled');
-      } else {
-        toast.error('Sign in failed');
-      }
-    }
+  const handleLogin = () => {
+    toast.info('Sign In is temporarily frozen while backend functions and security rules are being deployed & verified.', {
+      description: 'All public estimation tools, kit home specifications, blueprints, and quote submissions remain fully operational.'
+    });
   };
 
   const handleLogout = async () => {
@@ -450,13 +441,18 @@ export default function Navbar() {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="rounded-full gap-2 text-muted-foreground hover:text-primary"
+                className="rounded-full gap-1.5 text-muted-foreground hover:text-foreground border border-border/60 bg-muted/40 hover:bg-muted/70 transition-all text-xs font-semibold cursor-pointer shadow-2xs"
                 onClick={handleLogin}
+                title="Sign In is temporarily frozen while backend functions and security rules are being deployed."
               >
-                <LogIn size={16} />
-                Sign In
+                <Lock size={13} className="text-amber-500" />
+                <span>Sign In</span>
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 uppercase tracking-wider">
+                  Frozen
+                </span>
               </Button>
             )}
+            <PWAInstallButton variant="nav" />
             <Button 
               size="sm" 
               className="rounded-full px-6"
@@ -644,8 +640,26 @@ export default function Navbar() {
                 <ChevronRight size={18} className="text-muted-foreground" />
               </HashLink>
 
+              <button
+                type="button"
+                onClick={handleLogin}
+                className="w-full mt-3 flex items-center justify-between p-3 rounded-xl bg-muted/40 border border-border/60 text-xs font-medium text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Lock size={14} className="text-amber-500" />
+                  <span className="font-semibold text-foreground">Sign In</span>
+                </div>
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 uppercase tracking-wider">
+                  Frozen
+                </span>
+              </button>
+
+              <div className="mt-3">
+                <PWAInstallButton variant="banner" />
+              </div>
+
               <Button 
-                className="w-full mt-4 rounded-xl py-6 text-base font-bold"
+                className="w-full mt-3 rounded-xl py-6 text-base font-bold"
                 onClick={() => {
                   setIsMobileMenuOpen(false);
                   setIsDiscoveryOpen(true);

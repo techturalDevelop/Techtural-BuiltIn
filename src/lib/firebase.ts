@@ -99,29 +99,108 @@ export async function logout() {
 }
 
 // Service functions
+// Service functions
 export async function submitProjectRequest(data: any) {
   const path = 'projectRequests';
+  
+  // Clean payload
+  const cleanData = {
+    name: String(data.name || '').trim(),
+    email: String(data.email || '').trim().toLowerCase(),
+    phone: data.phone ? String(data.phone).trim() : 'Not provided',
+    projectType: data.projectType || 'residential',
+    service: data.service || 'Full Turnkey Construction',
+    location: data.location || 'Port Moresby',
+    budget: data.budget || 'Custom Budget',
+    status: 'pending',
+    ...(data.details ? { details: data.details } : {})
+  };
+
+  // 1. Dual delivery: Sync with server portal API
+  try {
+    fetch('/api/project-request', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cleanData),
+    }).catch(e => console.warn('Server fallback non-fatal:', e));
+  } catch (_) {}
+
+  // 2. Direct Firestore SDK submission
   try {
     return await addDoc(collection(db, path), {
-      ...data,
-      status: 'pending',
+      ...cleanData,
       createdAt: serverTimestamp(),
     });
   } catch (error) {
+    console.warn("Client Firestore write encountered error, using server fallback:", error);
+    try {
+      const resp = await fetch('/api/project-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cleanData),
+      });
+      if (resp.ok) {
+        return { id: `ack-${Date.now()}` };
+      }
+    } catch (_) {}
     handleFirestoreError(error, OperationType.WRITE, path);
   }
 }
 
 export async function submitContactMessage(data: any) {
   const path = 'contactMessages';
+
+  // Clean payload
+  const cleanData = {
+    name: String(data.name || '').trim(),
+    email: String(data.email || '').trim().toLowerCase(),
+    subject: data.subject ? String(data.subject).trim() : 'General Project Inquiry',
+    message: String(data.message || '').trim(),
+    ...(data.phone ? { phone: String(data.phone).trim() } : {})
+  };
+
+  // 1. Dual delivery: Sync with server portal API
+  try {
+    fetch('/api/contact-message', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cleanData),
+    }).catch(e => console.warn('Server fallback non-fatal:', e));
+  } catch (_) {}
+
+  // 2. Direct Firestore SDK submission
   try {
     return await addDoc(collection(db, path), {
-      ...data,
+      ...cleanData,
       createdAt: serverTimestamp(),
     });
   } catch (error) {
+    console.warn("Client Firestore write encountered error, using server fallback:", error);
+    try {
+      const resp = await fetch('/api/contact-message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cleanData),
+      });
+      if (resp.ok) {
+        return { id: `ack-${Date.now()}` };
+      }
+    } catch (_) {}
     handleFirestoreError(error, OperationType.WRITE, path);
   }
+}
+
+export async function fetchPortalInquiries() {
+  try {
+    const res = await fetch('/api/inquiries');
+    if (res.ok) {
+      const data = await res.json();
+      return data.inquiries || [];
+    }
+  } catch (err) {
+    console.error('Failed to fetch inquiries:', err);
+  }
+  return [];
 }
 
 export async function submitCostEstimate(data: any) {

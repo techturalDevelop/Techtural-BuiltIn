@@ -38,8 +38,10 @@ import {
   Mail,
   ExternalLink,
   ShieldAlert,
-  Palette
+  Palette,
+  Share2
 } from 'lucide-react';
+import { ModelShareModal } from '@/components/ModelShareModal';
 import { KitHomeImageZoomModal, PreviewImageItem } from '@/components/KitHomeImageZoomModal';
 import { KitHomeDisplayPreviewBox } from '@/components/KitHomeDisplayPreviewBox';
 import { KitHomeScopeOfWorksModal } from '@/components/KitHomeScopeOfWorksModal';
@@ -94,6 +96,15 @@ export default function KitHomesPage() {
   const [isPreviewZoomOpen, setIsPreviewZoomOpen] = useState(false);
   const [previewZoomModel, setPreviewZoomModel] = useState<KitHomeModel | null>(null);
   const [previewZoomInitialIndex, setPreviewZoomInitialIndex] = useState(0);
+
+  // Social Share Modal states
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [shareModalModel, setShareModalModel] = useState<KitHomeModel | null>(null);
+
+  const openShareModal = (model: KitHomeModel) => {
+    setShareModalModel(model);
+    setIsShareModalOpen(true);
+  };
 
   // Customizer selections for active modal
   const [customSelections, setCustomSelections] = useState<{
@@ -633,10 +644,22 @@ export default function KitHomesPage() {
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
+                            openShareModal(model);
+                          }}
+                          title="Share kit home model on WhatsApp, Facebook, X, etc."
+                          className="px-2.5 py-1 rounded-lg bg-black/65 hover:bg-primary text-white text-xs font-semibold backdrop-blur-md border border-white/20 transition-all flex items-center gap-1 hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
+                        >
+                          <Share2 size={12} className="text-amber-300" />
+                          <span>Share</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
                             openImageZoom(model, 0);
                           }}
                           title="Preview image with zoom options"
-                          className="px-2.5 py-1 rounded-lg bg-black/65 hover:bg-black/90 text-white text-xs font-semibold backdrop-blur-md border border-white/20 transition-all flex items-center gap-1 hover:scale-105 active:scale-95 shadow-sm"
+                          className="px-2.5 py-1 rounded-lg bg-black/65 hover:bg-black/90 text-white text-xs font-semibold backdrop-blur-md border border-white/20 transition-all flex items-center gap-1 hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
                         >
                           <ZoomIn size={12} className="text-primary" />
                           <span>Preview</span>
@@ -989,17 +1012,28 @@ export default function KitHomesPage() {
                         </Button>
                       </div>
 
-                      <Button
-                        variant="secondary"
-                        className="w-full rounded-xl h-9 text-xs font-medium border border-border/80 text-foreground hover:bg-muted"
-                        onClick={() => {
-                          setSowModalModel(model);
-                          setIsSowModalOpen(true);
-                        }}
-                      >
-                        <Download size={13} className="mr-1.5 text-primary" />
-                        Read &amp; Download Scope of Works (PDF Inquiry)
-                      </Button>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="secondary"
+                          className="flex-1 rounded-xl h-9 text-xs font-medium border border-border/80 text-foreground hover:bg-muted"
+                          onClick={() => {
+                            setSowModalModel(model);
+                            setIsSowModalOpen(true);
+                          }}
+                        >
+                          <Download size={13} className="mr-1.5 text-primary" />
+                          <span>Scope of Works (PDF)</span>
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="rounded-xl h-9 px-3 text-xs font-semibold border-border/80 text-foreground hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors cursor-pointer"
+                          onClick={() => openShareModal(model)}
+                          title="Share this model directly on WhatsApp, Facebook, X, or copy link"
+                        >
+                          <Share2 size={13} className="mr-1 text-primary" />
+                          <span>Share</span>
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -1271,16 +1305,29 @@ export default function KitHomesPage() {
                       </span>
                     </div>
 
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      onClick={() => openImageZoom(activeModel, 0)}
-                      className="h-8 rounded-xl bg-white/10 hover:bg-white/20 text-white border-white/20 text-xs font-semibold gap-1.5 shadow-xs"
-                    >
-                      <ZoomIn size={13} className="text-primary" />
-                      <span>Preview &amp; Zoom Images</span>
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() => openShareModal(activeModel)}
+                        className="h-8 rounded-xl bg-white/10 hover:bg-white/20 text-white border-white/20 text-xs font-semibold gap-1.5 shadow-xs cursor-pointer"
+                        title="Share this model on social media"
+                      >
+                        <Share2 size={13} className="text-amber-300" />
+                        <span>Share Model</span>
+                      </Button>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() => openImageZoom(activeModel, 0)}
+                        className="h-8 rounded-xl bg-white/10 hover:bg-white/20 text-white border-white/20 text-xs font-semibold gap-1.5 shadow-xs cursor-pointer"
+                      >
+                        <ZoomIn size={13} className="text-primary" />
+                        <span>Preview &amp; Zoom</span>
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2230,6 +2277,13 @@ export default function KitHomesPage() {
         isOpen={isSowModalOpen}
         onClose={() => setIsSowModalOpen(false)}
         model={sowModalModel}
+      />
+
+      {/* SOCIAL MEDIA SHARE MODAL */}
+      <ModelShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        model={shareModalModel}
       />
     </div>
   );

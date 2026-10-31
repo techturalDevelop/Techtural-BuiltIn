@@ -32,21 +32,24 @@ service cloud.firestore {
     // ===============================================================
     
     function isValidProjectRequest() {
-      return validString('projectType', 50) &&
-             validString('service', 50) &&
-             validString('location', 100) &&
-             validString('budget', 50) &&
-             validString('name', 100) &&
+      return validString('projectType', 100) &&
+             validString('service', 250) &&
+             validString('location', 200) &&
+             validString('budget', 150) &&
+             validString('name', 150) &&
              isValidEmail(request.resource.data.email) &&
+             (!('phone' in request.resource.data) || (request.resource.data.phone is string && request.resource.data.phone.size() <= 100)) &&
+             (!('details' in request.resource.data) || request.resource.data.details is map) &&
              (request.resource.data.status == 'pending') &&
              request.resource.data.createdAt is timestamp;
     }
 
     function isValidContactMessage() {
-      return validString('name', 100) &&
+      return validString('name', 150) &&
              isValidEmail(request.resource.data.email) &&
-             validString('subject', 200) &&
-             validString('message', 5000) &&
+             validString('subject', 300) &&
+             validString('message', 10000) &&
+             (!('phone' in request.resource.data) || (request.resource.data.phone is string && request.resource.data.phone.size() <= 100)) &&
              request.resource.data.createdAt is timestamp;
     }
 

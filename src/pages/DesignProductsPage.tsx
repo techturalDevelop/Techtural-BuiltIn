@@ -30,8 +30,10 @@ import {
   Truck,
   BellRing,
   FileCheck2,
-  GraduationCap
+  GraduationCap,
+  Share2
 } from 'lucide-react';
+import { ModelShareModal } from '@/components/ModelShareModal';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -78,6 +80,13 @@ export default function DesignProductsPage({ defaultTab }: DesignProductsPagePro
   // Modals
   const [selectedProduct, setSelectedProduct] = useState<ProductPlaceholder | null>(null);
   const [quoteProduct, setQuoteProduct] = useState<ProductPlaceholder | KitHomeModel | null>(null);
+  const [shareModalModel, setShareModalModel] = useState<KitHomeModel | null>(null);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
+  const openShareModal = (model: KitHomeModel) => {
+    setShareModalModel(model);
+    setIsShareModalOpen(true);
+  };
   
   // Quote form state
   const [formData, setFormData] = useState({
@@ -425,11 +434,25 @@ export default function DesignProductsPage({ defaultTab }: DesignProductsPagePro
                           </span>
                         )}
                       </div>
-                      {model.isHighset && (
-                        <span className="px-2 py-0.5 rounded-md bg-emerald-600/90 text-white text-[11px] font-bold">
-                          Elevated Stilt
-                        </span>
-                      )}
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openShareModal(model);
+                          }}
+                          title="Share kit home model"
+                          className="px-2 py-0.5 rounded-md bg-black/65 hover:bg-primary text-white text-[11px] font-semibold backdrop-blur-md border border-white/20 transition-all flex items-center gap-1 hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
+                        >
+                          <Share2 size={11} className="text-amber-300" />
+                          <span>Share</span>
+                        </button>
+                        {model.isHighset && (
+                          <span className="px-2 py-0.5 rounded-md bg-emerald-600/90 text-white text-[11px] font-bold">
+                            Elevated Stilt
+                          </span>
+                        )}
+                      </div>
                     </div>
 
                     <div className="absolute bottom-3 left-3 right-3 text-white">
@@ -462,8 +485,8 @@ export default function DesignProductsPage({ defaultTab }: DesignProductsPagePro
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2 pt-1">
-                      <Link to={`/kit-homes?model=${model.id}`} className="w-full">
+                    <div className="flex items-center gap-2 pt-1">
+                      <Link to={`/kit-homes?model=${model.id}`} className="flex-1">
                         <Button variant="outline" size="sm" className="w-full rounded-xl text-xs">
                           View Details
                         </Button>
@@ -471,9 +494,18 @@ export default function DesignProductsPage({ defaultTab }: DesignProductsPagePro
                       <Button
                         size="sm"
                         onClick={() => setQuoteProduct(model)}
-                        className="rounded-xl text-xs bg-primary hover:bg-primary/90 text-primary-foreground"
+                        className="flex-1 rounded-xl text-xs bg-primary hover:bg-primary/90 text-primary-foreground"
                       >
                         Request Quote
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openShareModal(model)}
+                        className="rounded-xl px-2.5 text-xs border-border hover:bg-primary/10 hover:text-primary transition-colors cursor-pointer"
+                        title="Share on WhatsApp, Facebook, X, etc."
+                      >
+                        <Share2 size={13} className="text-primary" />
                       </Button>
                     </div>
                   </div>
@@ -488,7 +520,7 @@ export default function DesignProductsPage({ defaultTab }: DesignProductsPagePro
                   onClick={() => handleTabChange('residential-kit-homes')}
                   className="rounded-xl text-xs gap-2"
                 >
-                  <span>View All 18 Kit Home Models</span>
+                  <span>View All 20 Kit Home Models</span>
                   <ChevronRight size={14} />
                 </Button>
               </div>
@@ -1314,6 +1346,13 @@ export default function DesignProductsPage({ defaultTab }: DesignProductsPagePro
           </div>
         )}
       </AnimatePresence>
+
+      {/* Model Social Share Modal */}
+      <ModelShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        model={shareModalModel}
+      />
     </div>
   );
 }
