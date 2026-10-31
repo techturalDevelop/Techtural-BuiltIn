@@ -37,9 +37,9 @@ export const ModelShareModal: React.FC<ModelShareModalProps> = ({
   const [copied, setCopied] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
 
-  // Generate deep-link URL pointing specifically to this kit home model
+  // Generate dedicated static share URL pointing specifically to this kit home model's 3D OpenGraph card
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://techturalbuiltin.com';
-  const shareUrl = model ? `${baseUrl}/kit-homes?model=${encodeURIComponent(model.id)}` : baseUrl;
+  const shareUrl = model ? `${baseUrl}/share/model-${model.officialNumber}` : baseUrl;
 
   // Whenever the modal opens for a model, update document head meta tags so client DOM has this 3D image
   useEffect(() => {

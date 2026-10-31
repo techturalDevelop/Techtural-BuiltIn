@@ -33,6 +33,7 @@ import ServicesPage from '@/pages/ServicesPage';
 import PrivacyPolicyPage from '@/pages/legal/PrivacyPolicyPage';
 import TermsOfUsePage from '@/pages/legal/TermsOfUsePage';
 import CookiePolicyPage from '@/pages/legal/CookiePolicyPage';
+import ShareRedirectPage from '@/pages/ShareRedirectPage';
 
 function HomePage() {
   return (
@@ -113,6 +114,7 @@ export default function App() {
               <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
               <Route path="/terms-of-use" element={<TermsOfUsePage />} />
               <Route path="/cookie-policy" element={<CookiePolicyPage />} />
+              <Route path="/share/:modelParam" element={<ShareRedirectPage />} />
             </Routes>
           </main>
           <Footer />
