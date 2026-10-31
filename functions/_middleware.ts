@@ -2,19 +2,29 @@ import { getShareMetadata } from '../src/data/kitHomeMetaMap';
 
 /**
  * Cloudflare Pages & Workers Edge Middleware
- * Automatically intercepts requests with ?model=... or ?preview=...
- * and uses Cloudflare's native HTMLRewriter to inject that Model's 3D artist impression image
- * into <meta property="og:image"> and <meta name="twitter:image"> for social scrapers (WhatsApp, Facebook, Twitter, LinkedIn).
+ * Intercepts requests for kit home models via:
+ * 1. Dedicated share paths: /share/model-1, /share/model-12, /share/tb-hc1b-m3, etc.
+ * 2. URL query parameters: ?model=... or ?preview=...
+ * 
+ * Injects that model's authentic 3D artist impression exterior render
+ * into <meta property="og:image"> and <meta name="twitter:image"> for social scrapers
+ * (WhatsApp, Facebook, Messenger, Twitter/X, LinkedIn, iMessage).
  */
 
 export async function onRequest(context: any) {
   const request = context.request;
   const url = new URL(request.url);
-  const modelParam = url.searchParams.get('model') || url.searchParams.get('preview');
+
+  // Extract model identifier from query parameters or path
+  const pathMatch = url.pathname.match(/\/share\/([^\/\?#]+)/i);
+  const modelParam = 
+    url.searchParams.get('model') || 
+    url.searchParams.get('preview') || 
+    (pathMatch ? pathMatch[1] : null);
 
   const response = await context.next();
 
-  // If no model query param or response is not HTML, return as-is
+  // If no model identifier or response is not HTML, pass through
   if (!modelParam) {
     return response;
   }

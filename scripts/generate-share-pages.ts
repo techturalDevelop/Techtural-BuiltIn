@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { KIT_HOMES_SHARE_MAP } from '../src/data/kitHomeMetaMap';
+import { KIT_HOMES_SHARE_MAP } from '../src/data/kitHomeMetaMap.ts';
 
 /**
  * Script that generates static HTML landing pages for each of the 20 Kit Home models.
@@ -10,11 +10,7 @@ import { KIT_HOMES_SHARE_MAP } from '../src/data/kitHomeMetaMap';
  * redirect to the full interactive application at /kit-homes?model=...
  */
 
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const projectRoot = path.resolve(__dirname, '..');
+const projectRoot = process.cwd();
 
 const targetDirs = [
   path.join(projectRoot, 'public', 'share'),
