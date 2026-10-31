@@ -1193,3 +1193,26 @@ export const PACKAGE_TIERS_INFO = [
     ],
   },
 ];
+
+/**
+ * Lookup a Kit Home model by identifier (id, code, officialNumber, or slug)
+ */
+export function findKitHomeModel(identifier: string | null | undefined): KitHomeModel | undefined {
+  if (!identifier) return undefined;
+  const clean = identifier.trim().toLowerCase();
+  
+  // Strip common prefixes
+  const normalized = clean.replace(/^(model-|model_|m)/i, '');
+  const parsedNum = parseInt(normalized, 10);
+
+  return KIT_HOME_MODELS.find(m => {
+    if (m.id.toLowerCase() === clean) return true;
+    if (m.code.toLowerCase() === clean) return true;
+    if (String(m.officialNumber) === clean || String(m.officialNumber) === normalized) return true;
+    if (!isNaN(parsedNum) && m.officialNumber === parsedNum) return true;
+    if (`model-${m.officialNumber}`.toLowerCase() === clean) return true;
+    if (`m${m.officialNumber}`.toLowerCase() === clean) return true;
+    if (m.name.toLowerCase() === clean) return true;
+    return false;
+  });
+}

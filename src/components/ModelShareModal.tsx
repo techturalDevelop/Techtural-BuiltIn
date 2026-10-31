@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Share2, 
   Copy, 
@@ -13,11 +13,15 @@ import {
   Bed,
   Bath,
   Maximize2,
-  Smartphone
+  Smartphone,
+  Download,
+  Image as ImageIcon,
+  CheckCircle2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { KitHomeModel } from '@/data/kitHomesData';
+import { updateSocialMetaTags } from '@/lib/seoMeta';
 
 interface ModelShareModalProps {
   model: KitHomeModel | null;
@@ -31,12 +35,26 @@ export const ModelShareModal: React.FC<ModelShareModalProps> = ({
   onClose,
 }) => {
   const [copied, setCopied] = useState(false);
-
-  if (!isOpen || !model) return null;
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // Generate deep-link URL pointing specifically to this kit home model
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://techturalbuiltin.com';
-  const shareUrl = `${baseUrl}/kit-homes?model=${encodeURIComponent(model.id)}`;
+  const shareUrl = model ? `${baseUrl}/kit-homes?model=${encodeURIComponent(model.id)}` : baseUrl;
+
+  // Whenever the modal opens for a model, update document head meta tags so client DOM has this 3D image
+  useEffect(() => {
+    if (isOpen && model) {
+      updateSocialMetaTags({
+        title: `Techtural Kit Home — ${model.name} (${model.code})`,
+        description: `${model.name} (${model.code}) | ${model.bedrooms} Bed, ${model.bathrooms} Bath, ${model.buildingAreaSqm} m². Engineered for Papua New Guinea.`,
+        imageUrl: model.image,
+        url: shareUrl,
+        imageAlt: `${model.name} 3D Artist Impression Perspective`,
+      });
+    }
+  }, [isOpen, model, shareUrl]);
+
+  if (!isOpen || !model) return null;
 
   const turnkeyText = model.isTurnKeyCostingInProgress
     ? 'Costing in Progress (Custom Quotes Available)'
@@ -45,13 +63,13 @@ export const ModelShareModal: React.FC<ModelShareModalProps> = ({
   const shareTitle = `Techtural Kit Home — ${model.name} (${model.code})`;
   const shareSummary = `${model.name} (${model.code}) | ${model.bedrooms} Bed, ${model.bathrooms} Bath, ${model.buildingAreaSqm} m² | Full Turn-Key: ${turnkeyText}. Engineered for Papua New Guinea.`;
 
-  // WhatsApp formatted text
+  // WhatsApp formatted text with 3D thumbnail pointer
   const whatsappText = `🏡 *Techtural BuiltIn Kit Home — ${model.name} (${model.code})*
 📐 *Area:* ${model.buildingAreaSqm} m² | 🛏️ *Bedrooms:* ${model.bedrooms} | 🚿 *Bathrooms:* ${model.bathrooms}
 💰 *Turn-Key Handover:* ${turnkeyText}
 📋 *Certified Blueprint CAD:* PGK ${model.blueprintPrice.toLocaleString()}
 
-Check out this modern kit home design engineered for Papua New Guinea:
+🖼️ *3D Artist Impression Preview & Specifications:*
 ${shareUrl}`;
 
   const handleCopyLink = async () => {
@@ -59,7 +77,7 @@ ${shareUrl}`;
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
       toast.success('Kit home link copied to clipboard!', {
-        description: 'You can now paste and share it anywhere.'
+        description: 'When pasted into WhatsApp or Facebook, this model’s 3D artist impression will load as the thumbnail preview.'
       });
       setTimeout(() => setCopied(false), 2500);
     } catch (err) {
@@ -68,19 +86,69 @@ ${shareUrl}`;
   };
 
   const handleNativeShare = async () => {
-    if (navigator.share) {
-      try {
+    if (typeof navigator === 'undefined' || !navigator.share) {
+      handleCopyLink();
+      return;
+    }
+
+    try {
+      // Try to fetch image as a File to attach thumbnail directly in Android / iOS share sheet
+      let sharedWithFile = false;
+      if (navigator.canShare) {
+        try {
+          const response = await fetch(model.image, { mode: 'cors' });
+          const blob = await response.blob();
+          const file = new File([blob], `${model.code}-3D-Artist-Impression.jpg`, { type: blob.type || 'image/jpeg' });
+          if (navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              title: shareTitle,
+              text: shareSummary,
+              url: shareUrl,
+              files: [file],
+            });
+            sharedWithFile = true;
+            toast.success('3D artist render shared successfully!');
+          }
+        } catch (_fileErr) {
+          // Fall back to link share
+        }
+      }
+
+      if (!sharedWithFile) {
         await navigator.share({
           title: shareTitle,
           text: shareSummary,
           url: shareUrl,
         });
         toast.success('Shared successfully!');
-      } catch (err) {
-        // User dismissed native share sheet
       }
-    } else {
-      handleCopyLink();
+    } catch (err) {
+      // User dismissed native share sheet
+    }
+  };
+
+  const handleDownloadImage = async () => {
+    setIsDownloading(true);
+    try {
+      const response = await fetch(model.image);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `Techtural_${model.code}_3D_Artist_Impression.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl);
+      toast.success('3D Artist Impression Image downloaded!', {
+        description: 'You can now upload or attach this high-res 3D render to social media posts or client proposals.'
+      });
+    } catch (err) {
+      // If direct blob download is blocked by CORS, open in new tab
+      window.open(model.image, '_blank');
+      toast.info('Opened 3D render image in a new tab for saving.');
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -114,11 +182,11 @@ ${shareUrl}`;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4 animate-in fade-in duration-200">
       <div 
-        className="w-full max-w-lg rounded-3xl bg-background border border-border shadow-2xl overflow-hidden relative"
+        className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl bg-background border border-border shadow-2xl relative"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-5 border-b border-border flex items-center justify-between bg-muted/20">
+        <div className="sticky top-0 z-10 p-5 border-b border-border flex items-center justify-between bg-background/95 backdrop-blur-md">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
               <Share2 size={18} />
@@ -128,7 +196,7 @@ ${shareUrl}`;
                 Share Kit Home Model
               </h3>
               <p className="text-xs text-muted-foreground">
-                Direct social sharing for marketing &amp; client consultations
+                Direct social sharing with verified 3D artist impression thumbnail
               </p>
             </div>
           </div>
@@ -141,57 +209,90 @@ ${shareUrl}`;
           </button>
         </div>
 
-        {/* Model Preview Card */}
+        {/* Modal Body */}
         <div className="p-5 space-y-5">
-          <div className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-muted/40 border border-border/80">
-            <img
-              src={model.image}
-              alt={model.name}
-              className="w-20 h-20 rounded-xl object-cover shrink-0 border border-border/60"
-              referrerPolicy="no-referrer"
-            />
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-1.5 flex-wrap">
+          {/* 3D Artist Impression Visual Showcase Card */}
+          <div className="overflow-hidden rounded-2xl bg-muted/40 border border-border shadow-xs">
+            <div className="relative aspect-16/9 w-full bg-slate-950 overflow-hidden group">
+              <img
+                src={model.image}
+                alt={`${model.name} 3D Artist Impression`}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              
+              {/* Badges on Thumbnail */}
+              <div className="absolute top-3 left-3 flex items-center gap-1.5 flex-wrap">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-500/90 text-slate-950 text-[10px] font-black uppercase tracking-wider shadow-sm">
+                  <ImageIcon size={11} />
+                  <span>3D Artist Impression Thumbnail</span>
+                </span>
                 {model.officialNumber && (
-                  <span className="text-[10px] font-mono font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
-                    #{String(model.officialNumber).padStart(2, '0')}
+                  <span className="text-[10px] font-mono font-bold text-white bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded-full border border-white/20">
+                    Model #{String(model.officialNumber).padStart(2, '0')}
                   </span>
                 )}
-                <span className="text-[10px] font-mono font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded">
-                  {model.code}
+              </div>
+
+              {/* Model details over image banner */}
+              <div className="absolute bottom-3 left-3 right-3 text-white">
+                <span className="text-[10px] font-mono font-bold text-amber-300">
+                  {model.code} • {model.collectionName}
                 </span>
-                <span className="text-[10px] font-semibold text-muted-foreground">
-                  {model.collectionName}
+                <h4 className="text-base font-black truncate text-white drop-shadow-xs">
+                  {model.name}
+                </h4>
+                <div className="flex items-center gap-3 text-xs text-slate-200 mt-1">
+                  <span className="inline-flex items-center gap-1">
+                    <Bed size={13} className="text-amber-400" /> {model.bedrooms} Bed
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <Bath size={13} className="text-amber-400" /> {model.bathrooms} Bath
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <Maximize2 size={13} className="text-amber-400" /> {model.buildingAreaSqm} m²
+                  </span>
+                  <span className="font-semibold text-emerald-400 ml-auto">
+                    {turnkeyText}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Thumbnail verification note */}
+            <div className="p-3 bg-muted/70 flex items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2 text-muted-foreground text-[11px] leading-tight">
+                <CheckCircle2 size={15} className="text-emerald-500 shrink-0" />
+                <span>
+                  This high-resolution 3D perspective thumbnail will automatically display when shared on social networks.
                 </span>
               </div>
-              <h4 className="text-sm font-bold text-foreground truncate mt-1">
-                {model.name}
-              </h4>
-              <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
-                <span className="inline-flex items-center gap-1">
-                  <Bed size={12} className="text-primary" /> {model.bedrooms} Bed
-                </span>
-                <span className="inline-flex items-center gap-1">
-                  <Bath size={12} className="text-primary" /> {model.bathrooms} Bath
-                </span>
-                <span className="inline-flex items-center gap-1">
-                  <Maximize2 size={12} className="text-primary" /> {model.buildingAreaSqm} m²
-                </span>
-              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleDownloadImage}
+                disabled={isDownloading}
+                className="h-7 px-2.5 rounded-lg text-[11px] gap-1 shrink-0 font-medium hover:bg-background"
+                title="Download 3D render file"
+              >
+                <Download size={12} />
+                <span>{isDownloading ? 'Saving...' : 'Save 3D Photo'}</span>
+              </Button>
             </div>
           </div>
 
           {/* Social Share Grid */}
           <div className="space-y-2.5">
             <label className="text-xs font-bold text-foreground uppercase tracking-wider block">
-              Share Directly To:
+              Share With Thumbnail Directly To:
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
               {/* WhatsApp */}
               <button
                 onClick={handleWhatsAppShare}
-                className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 transition-all hover:scale-102 active:scale-98 cursor-pointer group"
-                title="Share on WhatsApp"
+                className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 transition-all hover:scale-102 active:scale-98 cursor-pointer group shadow-2xs"
+                title="Share on WhatsApp with 3D Preview"
               >
                 <div className="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
                   <MessageSquare size={18} />
@@ -202,8 +303,8 @@ ${shareUrl}`;
               {/* Facebook */}
               <button
                 onClick={handleFacebookShare}
-                className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/20 transition-all hover:scale-102 active:scale-98 cursor-pointer group"
-                title="Share on Facebook"
+                className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/20 transition-all hover:scale-102 active:scale-98 cursor-pointer group shadow-2xs"
+                title="Share on Facebook with 3D Thumbnail"
               >
                 <div className="w-10 h-10 rounded-full bg-[#1877F2] text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
                   <Facebook size={18} />
@@ -214,8 +315,8 @@ ${shareUrl}`;
               {/* X / Twitter */}
               <button
                 onClick={handleTwitterShare}
-                className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl bg-slate-500/10 hover:bg-slate-500/20 text-foreground border border-border/80 transition-all hover:scale-102 active:scale-98 cursor-pointer group"
-                title="Share on X"
+                className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl bg-slate-500/10 hover:bg-slate-500/20 text-foreground border border-border/80 transition-all hover:scale-102 active:scale-98 cursor-pointer group shadow-2xs"
+                title="Share on X with 3D Card"
               >
                 <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
                   <Twitter size={18} />
@@ -226,8 +327,8 @@ ${shareUrl}`;
               {/* LinkedIn */}
               <button
                 onClick={handleLinkedInShare}
-                className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl bg-sky-500/10 hover:bg-sky-500/20 text-sky-700 dark:text-sky-400 border border-sky-500/20 transition-all hover:scale-102 active:scale-98 cursor-pointer group"
-                title="Share on LinkedIn"
+                className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl bg-sky-500/10 hover:bg-sky-500/20 text-sky-700 dark:text-sky-400 border border-sky-500/20 transition-all hover:scale-102 active:scale-98 cursor-pointer group shadow-2xs"
+                title="Share on LinkedIn with 3D Preview"
               >
                 <div className="w-10 h-10 rounded-full bg-[#0A66C2] text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
                   <Linkedin size={18} />
@@ -242,7 +343,7 @@ ${shareUrl}`;
             <Button
               variant="outline"
               onClick={handleNativeShare}
-              className="w-full rounded-2xl h-11 gap-2 border-primary/30 text-primary hover:bg-primary/5 font-semibold text-xs cursor-pointer"
+              className="w-full rounded-2xl h-11 gap-2 border-primary/30 text-primary hover:bg-primary/5 font-semibold text-xs cursor-pointer shadow-2xs"
             >
               <Smartphone size={16} />
               <span>Share via Android / Device Apps (Instagram, Telegram, SMS)</span>
@@ -252,7 +353,7 @@ ${shareUrl}`;
           {/* Direct Link Copy Bar */}
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-foreground uppercase tracking-wider block">
-              Direct Model Link:
+              Direct Kit Home Model Link:
             </label>
             <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-muted/50 border border-border">
               <input
@@ -264,7 +365,7 @@ ${shareUrl}`;
               <Button
                 size="sm"
                 onClick={handleCopyLink}
-                className="rounded-xl px-4 text-xs font-semibold gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 shrink-0 cursor-pointer"
+                className="rounded-xl px-4 text-xs font-semibold gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 shrink-0 cursor-pointer shadow-xs"
               >
                 {copied ? <Check size={14} className="text-white" /> : <Copy size={14} />}
                 <span>{copied ? 'Copied!' : 'Copy Link'}</span>
@@ -274,10 +375,10 @@ ${shareUrl}`;
         </div>
 
         {/* Footer */}
-        <div className="p-4 bg-muted/20 border-t border-border flex justify-between items-center text-xs text-muted-foreground">
+        <div className="sticky bottom-0 z-10 p-4 bg-muted/20 border-t border-border flex justify-between items-center text-xs text-muted-foreground backdrop-blur-md">
           <span className="flex items-center gap-1">
             <Sparkles size={13} className="text-primary" />
-            Designed for marketing &amp; customer engagement in PNG
+            Verified 3D perspective thumbnail attached
           </span>
           <Button
             variant="ghost"

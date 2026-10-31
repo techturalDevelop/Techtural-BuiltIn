@@ -1,8 +1,10 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import { GoogleGenAI } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
 import dotenv from 'dotenv';
+import { getShareMetadata } from './src/data/kitHomeMetaMap';
 
 dotenv.config();
 
@@ -425,6 +427,27 @@ Return ONLY valid JSON.`;
   }
 });
 
+function injectModelSocialMeta(html: string, modelId?: string): string {
+  if (!modelId) return html;
+  const model = getShareMetadata(modelId);
+  if (!model) return html;
+
+  const title = `Techtural Kit Home — ${model.name} (${model.code})`;
+  const description = `${model.name} (${model.code}) | ${model.bedrooms} Bed, ${model.bathrooms} Bath, ${model.buildingAreaSqm} m². Engineered for Papua New Guinea.`;
+  const image = model.image;
+
+  return html
+    .replace(/<title>.*?<\/title>/i, `<title>${title}</title>`)
+    .replace(/(<meta\s+name=["']description["']\s+content=["']).*?(["']\s*\/?>)/i, `$1${description}$2`)
+    .replace(/(<meta\s+property=["']og:title["']\s+content=["']).*?(["']\s*\/?>)/i, `$1${title}$2`)
+    .replace(/(<meta\s+property=["']og:description["']\s+content=["']).*?(["']\s*\/?>)/i, `$1${description}$2`)
+    .replace(/(<meta\s+property=["']og:image["']\s+content=["']).*?(["']\s*\/?>)/i, `$1${image}$2`)
+    .replace(/(<meta\s+property=["']og:image:secure_url["']\s+content=["']).*?(["']\s*\/?>)/i, `$1${image}$2`)
+    .replace(/(<meta\s+name=["']twitter:title["']\s+content=["']).*?(["']\s*\/?>)/i, `$1${title}$2`)
+    .replace(/(<meta\s+name=["']twitter:description["']\s+content=["']).*?(["']\s*\/?>)/i, `$1${description}$2`)
+    .replace(/(<meta\s+name=["']twitter:image["']\s+content=["']).*?(["']\s*\/?>)/i, `$1${image}$2`);
+}
+
 async function startServer() {
   // Vite middleware in development
   if (process.env.NODE_ENV !== 'production') {
@@ -439,9 +462,18 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), 'dist');
-    app.use(express.static(distPath));
+    const indexHtmlPath = path.join(distPath, 'index.html');
+    app.use(express.static(distPath, { index: false }));
     app.get('*', (req, res) => {
-      res.sendFile(path.join(distPath, 'index.html'));
+      try {
+        const rawHtml = fs.readFileSync(indexHtmlPath, 'utf-8');
+        const modelParam = (req.query.model || req.query.preview) as string | undefined;
+        const finalHtml = injectModelSocialMeta(rawHtml, modelParam);
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.send(finalHtml);
+      } catch (_err) {
+        res.sendFile(indexHtmlPath);
+      }
     });
   }
 

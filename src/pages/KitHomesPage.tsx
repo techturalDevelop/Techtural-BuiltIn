@@ -77,7 +77,8 @@ import {
   formatKitHomeQuoteWhatsAppMessage,
   formatBlueprintInquiryWhatsAppMessage 
 } from '@/lib/communicationLinks';
-import { KIT_HOME_MODELS, KIT_HOME_COLLECTIONS, PACKAGE_TIERS_INFO, KitHomeModel } from '@/data/kitHomesData';
+import { KIT_HOME_MODELS, KIT_HOME_COLLECTIONS, PACKAGE_TIERS_INFO, KitHomeModel, findKitHomeModel } from '@/data/kitHomesData';
+import { updateSocialMetaTags } from '@/lib/seoMeta';
 
 export default function KitHomesPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -279,16 +280,23 @@ export default function KitHomesPage() {
     return items;
   }, [previewZoomModel]);
 
-  // Handle URL query parameter pre-selection
+  // Handle URL query parameter pre-selection and dynamic OpenGraph sync
   useEffect(() => {
     const modelParam = searchParams.get('model');
     const previewParam = searchParams.get('preview');
     const target = modelParam || previewParam;
     if (target) {
-      const found = KIT_HOME_MODELS.find(
-        m => m.id.toLowerCase() === target.toLowerCase() || m.code.toLowerCase() === target.toLowerCase()
-      );
+      const found = findKitHomeModel(target);
       if (found) {
+        // Update client document title and social tags for this model
+        updateSocialMetaTags({
+          title: `Techtural Kit Home — ${found.name} (${found.code})`,
+          description: `${found.name} (${found.code}) | ${found.bedrooms} Bed, ${found.bathrooms} Bath, ${found.buildingAreaSqm} m². Engineered for Papua New Guinea.`,
+          imageUrl: found.image,
+          url: `${window.location.origin}/kit-homes?model=${encodeURIComponent(found.id)}`,
+          imageAlt: `${found.name} 3D Artist Impression Perspective`,
+        });
+
         if (previewParam) {
           openImageZoom(found, 0);
         } else {
