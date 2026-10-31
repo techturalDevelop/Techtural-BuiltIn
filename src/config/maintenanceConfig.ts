@@ -33,7 +33,7 @@ export interface MaintenanceSettings {
 
 export const MAINTENANCE_CONFIG: MaintenanceSettings = {
   // Set to true to activate standard maintenance notice on the entire website
-  enabled: true,
+  enabled: false,
 
   badge: 'Scheduled Maintenance & Upgrade',
   title: 'Digital Systems Under Scheduled Maintenance',
