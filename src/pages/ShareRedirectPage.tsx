@@ -10,10 +10,12 @@ export default function ShareRedirectPage() {
   useEffect(() => {
     const model = findKitHomeModel(modelParam);
     if (model) {
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      const thumb = origin ? `${origin}/share-thumbnails/model-${model.officialNumber}.jpg` : model.image;
       updateSocialMetaTags({
         title: `Techtural Kit Home — ${model.name} (${model.code})`,
         description: `${model.name} (${model.code}) | ${model.bedrooms} Bed, ${model.bathrooms} Bath, ${model.buildingAreaSqm} m². Engineered for Papua New Guinea.`,
-        imageUrl: model.image,
+        imageUrl: thumb,
         url: typeof window !== 'undefined' ? window.location.href : undefined,
         imageAlt: `${model.name} 3D Artist Impression Perspective`,
       });

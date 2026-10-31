@@ -41,7 +41,8 @@ export async function onRequest(context: any) {
 
   const title = `Techtural Kit Home — ${model.name} (${model.code})`;
   const description = `${model.name} (${model.code}) | ${model.bedrooms} Bed, ${model.bathrooms} Bath, ${model.buildingAreaSqm} m². Engineered for Papua New Guinea.`;
-  const imageUrl = model.image;
+  const host = url.origin;
+  const imageUrl = `${host}/share-thumbnails/model-${model.officialNumber}.jpg`;
 
   // Use Cloudflare's native HTMLRewriter to rewrite OpenGraph & Twitter tags on the fly
   // @ts-ignore
@@ -76,6 +77,21 @@ export async function onRequest(context: any) {
       .on('meta[property="og:image:secure_url"]', {
         element(e: any) {
           e.setAttribute('content', imageUrl);
+        }
+      })
+      .on('meta[property="og:image:type"]', {
+        element(e: any) {
+          e.setAttribute('content', 'image/jpeg');
+        }
+      })
+      .on('meta[property="og:image:width"]', {
+        element(e: any) {
+          e.setAttribute('content', '1200');
+        }
+      })
+      .on('meta[property="og:image:height"]', {
+        element(e: any) {
+          e.setAttribute('content', '675');
         }
       })
       .on('meta[name="twitter:image"]', {

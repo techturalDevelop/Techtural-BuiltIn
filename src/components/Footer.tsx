@@ -1,12 +1,9 @@
-import { useState } from 'react';
-import { Facebook, Twitter, Linkedin, Instagram, MessageSquare, Inbox } from 'lucide-react';
+import { Facebook, Twitter, Linkedin, Instagram, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PWAInstallButton from '@/components/PWAInstallButton';
-import PortalInquiriesModal from '@/components/PortalInquiriesModal';
 import { PRIMARY_WHATSAPP_NUMBER, DISPLAY_WHATSAPP, DISPLAY_PHONE, buildWhatsAppLink, buildMailtoLink, PRIMARY_EMAIL, SECONDARY_EMAIL } from '@/lib/communicationLinks';
 
 export default function Footer() {
-  const [isPortalModalOpen, setIsPortalModalOpen] = useState(false);
   return (
     <footer className="bg-background border-t border-border py-12">
       <div className="container mx-auto px-6">
@@ -105,16 +102,6 @@ export default function Footer() {
               <li><Link to="/privacy-policy" className="text-muted-foreground hover:text-primary transition-colors">Privacy Policy</Link></li>
               <li><Link to="/terms-of-use" className="text-muted-foreground hover:text-primary transition-colors">Terms of Use</Link></li>
               <li><Link to="/cookie-policy" className="text-muted-foreground hover:text-primary transition-colors">Cookie Policy</Link></li>
-              <li>
-                <button
-                  type="button"
-                  onClick={() => setIsPortalModalOpen(true)}
-                  className="text-primary hover:underline font-semibold flex items-center gap-1.5 cursor-pointer text-xs"
-                >
-                  <Inbox size={13} />
-                  <span>Portal Desk &amp; Inquiries</span>
-                </button>
-              </li>
             </ul>
             <div className="pt-2">
               <PWAInstallButton variant="footer" />
@@ -158,11 +145,6 @@ export default function Footer() {
           </p>
         </div>
       </div>
-
-      <PortalInquiriesModal
-        isOpen={isPortalModalOpen}
-        onClose={() => setIsPortalModalOpen(false)}
-      />
     </footer>
   );
 }

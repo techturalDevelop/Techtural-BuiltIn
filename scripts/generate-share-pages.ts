@@ -20,7 +20,7 @@ const targetDirs = [
 function generateHtmlForModel(model: typeof KIT_HOMES_SHARE_MAP[0]): string {
   const title = `Techtural Kit Home — ${model.name} (${model.code})`;
   const description = `${model.name} (${model.code}) | ${model.bedrooms} Bed, ${model.bathrooms} Bath, ${model.buildingAreaSqm} m² | Turn-Key: PGK ${model.turnkeyPrice.toLocaleString()}. Engineered for Papua New Guinea.`;
-  const imageUrl = model.image;
+  const thumbnailRelative = `/share-thumbnails/model-${model.officialNumber}.jpg`;
   const canonicalUrl = `https://techturalbuiltin.com/share/model-${model.officialNumber}`;
 
   return `<!doctype html>
@@ -38,8 +38,8 @@ function generateHtmlForModel(model: typeof KIT_HOMES_SHARE_MAP[0]): string {
     <meta property="og:site_name" content="Techtural BuiltIn" />
     <meta property="og:title" content="${title}" />
     <meta property="og:description" content="${description}" />
-    <meta property="og:image" content="${imageUrl}" />
-    <meta property="og:image:secure_url" content="${imageUrl}" />
+    <meta property="og:image" content="${thumbnailRelative}" />
+    <meta property="og:image:secure_url" content="${thumbnailRelative}" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="675" />
@@ -50,7 +50,7 @@ function generateHtmlForModel(model: typeof KIT_HOMES_SHARE_MAP[0]): string {
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${title}" />
     <meta name="twitter:description" content="${description}" />
-    <meta name="twitter:image" content="${imageUrl}" />
+    <meta name="twitter:image" content="${thumbnailRelative}" />
     <meta name="twitter:image:alt" content="${model.name} (${model.code}) 3D Artist Impression Perspective" />
 
     <!-- Instant redirect to interactive Kit Homes Page with Model pre-selected -->
@@ -126,7 +126,7 @@ function generateHtmlForModel(model: typeof KIT_HOMES_SHARE_MAP[0]): string {
   <body>
     <div class="card">
       <span class="badge">Model #${String(model.officialNumber).padStart(2, '0')} • 3D Artist Impression</span>
-      <img class="img" src="${imageUrl}" alt="${model.name} 3D Artist Impression" />
+      <img class="img" src="${thumbnailRelative}" alt="${model.name} 3D Artist Impression" />
       <h1>${model.name} (${model.code})</h1>
       <p>${description}</p>
       <a class="btn" href="/kit-homes?model=${model.id}">View Model &amp; Blueprints &rarr;</a>
@@ -136,6 +136,19 @@ function generateHtmlForModel(model: typeof KIT_HOMES_SHARE_MAP[0]): string {
 }
 
 export function generateAllSharePages() {
+  // Ensure dist/share-thumbnails exists and is populated from public/share-thumbnails
+  const publicThumbDir = path.join(projectRoot, 'public', 'share-thumbnails');
+  const distThumbDir = path.join(projectRoot, 'dist', 'share-thumbnails');
+  if (fs.existsSync(publicThumbDir)) {
+    if (!fs.existsSync(distThumbDir)) {
+      fs.mkdirSync(distThumbDir, { recursive: true });
+    }
+    const files = fs.readdirSync(publicThumbDir);
+    for (const f of files) {
+      fs.copyFileSync(path.join(publicThumbDir, f), path.join(distThumbDir, f));
+    }
+  }
+
   for (const baseDir of targetDirs) {
     if (!fs.existsSync(baseDir)) {
       fs.mkdirSync(baseDir, { recursive: true });

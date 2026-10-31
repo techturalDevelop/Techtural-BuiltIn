@@ -13,6 +13,7 @@ export interface ModelShareMetadata {
   bathrooms: number;
   buildingAreaSqm: number;
   image: string;
+  shareThumbnail: string;
   turnkeyPrice: number;
 }
 
@@ -26,7 +27,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 1,
     buildingAreaSqm: 91.3,
     turnkeyPrice: 246510,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M1%20TBWeb_Publish/M1-Artist_012.jpg'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M1%20TBWeb_Publish/M1-Artist_012.jpg',
+    shareThumbnail: '/share-thumbnails/model-1.jpg'
   },
   {
     id: 'tb-ses1b-m2',
@@ -37,7 +39,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 2,
     buildingAreaSqm: 126,
     turnkeyPrice: 340200,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M2%20TBWeb_Publish/M2-Artist_000%20(8).jpg'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M2%20TBWeb_Publish/M2-Artist_000%20(8).jpg',
+    shareThumbnail: '/share-thumbnails/model-2.jpg'
   },
   {
     id: 'tb-hc1b-m3',
@@ -48,7 +51,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 1,
     buildingAreaSqm: 128.7,
     turnkeyPrice: 347490,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M3%20TBWeb_Publish/M3-D5%20Render%20(6).png'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M3%20TBWeb_Publish/M3-D5%20Render%20(6).png',
+    shareThumbnail: '/share-thumbnails/model-3.jpg'
   },
   {
     id: 'tb-ch1b-m4',
@@ -59,7 +63,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 2,
     buildingAreaSqm: 92.4,
     turnkeyPrice: 249480,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M4%20TBWeb_Publish/M4-D5%20Render%20(3).jpg'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M4%20TBWeb_Publish/M4-D5%20Render%20(3).jpg',
+    shareThumbnail: '/share-thumbnails/model-4.jpg'
   },
   {
     id: 'tb-kun2b-m5',
@@ -70,7 +75,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 2,
     buildingAreaSqm: 73.92,
     turnkeyPrice: 199584,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M5%20TBWeb_Publish/M5-Lumion%20Render%20012.jpg'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M5%20TBWeb_Publish/M5-Lumion%20Render%20012.jpg',
+    shareThumbnail: '/share-thumbnails/model-5.jpg'
   },
   {
     id: 'tb-cor2b-m6',
@@ -81,7 +87,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 1,
     buildingAreaSqm: 96,
     turnkeyPrice: 259200,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M6%20TBWeb_Publish/M6-Lumion%20Render%20009.jpg'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M6%20TBWeb_Publish/M6-Lumion%20Render%20009.jpg',
+    shareThumbnail: '/share-thumbnails/model-6.jpg'
   },
   {
     id: 'tb-lag2b-m7',
@@ -92,7 +99,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 1,
     buildingAreaSqm: 139.2,
     turnkeyPrice: 375840,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M7%20TBWeb_Publish/M7_Lumion%20Render-013.jpg'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M7%20TBWeb_Publish/M7_Lumion%20Render-013.jpg',
+    shareThumbnail: '/share-thumbnails/model-7.jpg'
   },
   {
     id: 'tb-blf2b-m8',
@@ -103,7 +111,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 1,
     buildingAreaSqm: 124.8,
     turnkeyPrice: 336960,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M8%20TBWeb_Publish/M8-Lumion%20Render%204.png'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M8%20TBWeb_Publish/M8-Lumion%20Render%204.png',
+    shareThumbnail: '/share-thumbnails/model-8.jpg'
   },
   {
     id: 'tb-kum3b-m9',
@@ -114,7 +123,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 2,
     buildingAreaSqm: 159.96,
     turnkeyPrice: 431892,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M9%20TBWeb_Publish/M9-Lumion%20Render%208.jpg'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M9%20TBWeb_Publish/M9-Lumion%20Render%208.jpg',
+    shareThumbnail: '/share-thumbnails/model-9.jpg'
   },
   {
     id: 'tb-ech3b-m10',
@@ -125,7 +135,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 2,
     buildingAreaSqm: 241.8,
     turnkeyPrice: 652860,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M10%20TBWeb_Publish/M10D5-Render%20Elevation%201.jpg'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M10%20TBWeb_Publish/M10D5-Render%20Elevation%201.jpg',
+    shareThumbnail: '/share-thumbnails/model-10.jpg'
   },
   {
     id: 'tb-hig3b-m11',
@@ -136,7 +147,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 2,
     buildingAreaSqm: 120,
     turnkeyPrice: 384000,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M11%20TBWeb_Publish/M11-Lumoin-Render%20001.jpg'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M11%20TBWeb_Publish/M11-Lumoin-Render%20001.jpg',
+    shareThumbnail: '/share-thumbnails/model-11.jpg'
   },
   {
     id: 'tb-spk3b-m12',
@@ -147,7 +159,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 2,
     buildingAreaSqm: 135,
     turnkeyPrice: 432000,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M12%20TBWeb_Publish/M12%20Lumion-Render%20006.png'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M12%20TBWeb_Publish/M12%20Lumion-Render%20006.png',
+    shareThumbnail: '/share-thumbnails/model-12.jpg'
   },
   {
     id: 'tb-tam3b-m13',
@@ -158,7 +171,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 2.5,
     buildingAreaSqm: 148,
     turnkeyPrice: 473600,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M13%20TBWeb_Publish/TB-M13-Lumion%20007.jpg'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M13%20TBWeb_Publish/TB-M13-Lumion%20007.jpg',
+    shareThumbnail: '/share-thumbnails/model-13.jpg'
   },
   {
     id: 'tb-kdh4b-m14',
@@ -169,7 +183,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 2,
     buildingAreaSqm: 140,
     turnkeyPrice: 448000,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M14%20TBWeb_Publish/M14-Lumion%20Render-002.jpg'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M14%20TBWeb_Publish/M14-Lumion%20Render-002.jpg',
+    shareThumbnail: '/share-thumbnails/model-14.jpg'
   },
   {
     id: 'tb-sgh4b-m15',
@@ -180,7 +195,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 2.5,
     buildingAreaSqm: 158,
     turnkeyPrice: 505600,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M15%20TBWeb_Publish/M15%20RenderD5%20(5).jpg'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M15%20TBWeb_Publish/M15%20RenderD5%20(5).jpg',
+    shareThumbnail: '/share-thumbnails/model-15.jpg'
   },
   {
     id: 'tb-kmh4b-m16',
@@ -191,7 +207,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 3,
     buildingAreaSqm: 176,
     turnkeyPrice: 563200,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M16%20TBWeb_Publish/M16-Lumion%20Render-007.jpg'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M16%20TBWeb_Publish/M16-Lumion%20Render-007.jpg',
+    shareThumbnail: '/share-thumbnails/model-16.jpg'
   },
   {
     id: 'tb-mot4b-m17',
@@ -202,7 +219,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 3,
     buildingAreaSqm: 192,
     turnkeyPrice: 614400,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M17%20TBWeb_Publish/M17-Lumion%20Render-04.jpg'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M17%20TBWeb_Publish/M17-Lumion%20Render-04.jpg',
+    shareThumbnail: '/share-thumbnails/model-17.jpg'
   },
   {
     id: 'tb-kna4b-m18',
@@ -213,7 +231,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 3.5,
     buildingAreaSqm: 218,
     turnkeyPrice: 697600,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M18%20TBWeb_Publish/GG-HH_Resident-Design-3D.png'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M18%20TBWeb_Publish/GG-HH_Resident-Design-3D.png',
+    shareThumbnail: '/share-thumbnails/model-18.jpg'
   },
   {
     id: 'tb-sov4b-m19',
@@ -224,7 +243,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 3.5,
     buildingAreaSqm: 230,
     turnkeyPrice: 736000,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/GH-4bed%20unit.png'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/GH-4bed%20unit.png',
+    shareThumbnail: '/share-thumbnails/model-19.jpg'
   },
   {
     id: 'tb-phg5b-m20',
@@ -235,7 +255,8 @@ export const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     bathrooms: 4,
     buildingAreaSqm: 260,
     turnkeyPrice: 832000,
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M20%20TBWeb_Publish/TB%20Model%2020-Signature%20Premium%20200%204B%20(2-Storey)b.png'
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M20%20TBWeb_Publish/TB%20Model%2020-Signature%20Premium%20200%204B%20(2-Storey)b.png',
+    shareThumbnail: '/share-thumbnails/model-20.jpg'
   }
 ];
 
@@ -255,4 +276,12 @@ export function getShareMetadata(identifier: string | null | undefined): ModelSh
     if (m.name.toLowerCase() === clean) return true;
     return false;
   });
+}
+
+export function getModelShareThumbnailUrl(model: ModelShareMetadata, origin?: string): string {
+  const base = (origin || '').replace(/\/$/, '');
+  if (base) {
+    return `${base}/share-thumbnails/model-${model.officialNumber}.jpg`;
+  }
+  return `/share-thumbnails/model-${model.officialNumber}.jpg`;
 }

@@ -263,6 +263,7 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json({ limit: '10mb' }));
+app.use('/share-thumbnails', express.static(path.join(process.cwd(), 'public', 'share-thumbnails')));
 
 // Lazy init Gemini client
 let aiClient: GoogleGenAI | null = null;
@@ -678,14 +679,14 @@ Return ONLY valid JSON.`;
   }
 });
 
-function injectModelSocialMeta(html: string, modelId?: string): string {
+function injectModelSocialMeta(html: string, modelId?: string, host?: string): string {
   if (!modelId) return html;
   const model = getShareMetadata(modelId);
   if (!model) return html;
 
   const title = `Techtural Kit Home — ${model.name} (${model.code})`;
   const description = `${model.name} (${model.code}) | ${model.bedrooms} Bed, ${model.bathrooms} Bath, ${model.buildingAreaSqm} m². Engineered for Papua New Guinea.`;
-  const image = model.image;
+  const image = host ? `${host}/share-thumbnails/model-${model.officialNumber}.jpg` : model.image;
 
   return html
     .replace(/<title>.*?<\/title>/i, `<title>${title}</title>`)
@@ -694,6 +695,7 @@ function injectModelSocialMeta(html: string, modelId?: string): string {
     .replace(/(<meta\s+property=["']og:description["']\s+content=["']).*?(["']\s*\/?>)/i, `$1${description}$2`)
     .replace(/(<meta\s+property=["']og:image["']\s+content=["']).*?(["']\s*\/?>)/i, `$1${image}$2`)
     .replace(/(<meta\s+property=["']og:image:secure_url["']\s+content=["']).*?(["']\s*\/?>)/i, `$1${image}$2`)
+    .replace(/(<meta\s+property=["']og:image:type["']\s+content=["']).*?(["']\s*\/?>)/i, `$1image/jpeg$2`)
     .replace(/(<meta\s+name=["']twitter:title["']\s+content=["']).*?(["']\s*\/?>)/i, `$1${title}$2`)
     .replace(/(<meta\s+name=["']twitter:description["']\s+content=["']).*?(["']\s*\/?>)/i, `$1${description}$2`)
     .replace(/(<meta\s+name=["']twitter:image["']\s+content=["']).*?(["']\s*\/?>)/i, `$1${image}$2`);
@@ -718,8 +720,10 @@ async function startServer() {
     app.get('*', (req, res) => {
       try {
         const rawHtml = fs.readFileSync(indexHtmlPath, 'utf-8');
-        const modelParam = (req.query.model || req.query.preview) as string | undefined;
-        const finalHtml = injectModelSocialMeta(rawHtml, modelParam);
+        const pathMatch = req.path.match(/\/share\/([^\/\?#]+)/i);
+        const modelParam = (pathMatch ? pathMatch[1] : (req.query.model || req.query.preview)) as string | undefined;
+        const host = `${req.protocol}://${req.get('host')}`;
+        const finalHtml = injectModelSocialMeta(rawHtml, modelParam, host);
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         res.send(finalHtml);
       } catch (_err) {

@@ -40,6 +40,7 @@ export const ModelShareModal: React.FC<ModelShareModalProps> = ({
   // Generate dedicated static share URL pointing specifically to this kit home model's 3D OpenGraph card
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://techturalbuiltin.com';
   const shareUrl = model ? `${baseUrl}/share/model-${model.officialNumber}` : baseUrl;
+  const thumbnailShareUrl = model ? `${baseUrl}/share-thumbnails/model-${model.officialNumber}.jpg` : '';
 
   // Whenever the modal opens for a model, update document head meta tags so client DOM has this 3D image
   useEffect(() => {
@@ -47,12 +48,12 @@ export const ModelShareModal: React.FC<ModelShareModalProps> = ({
       updateSocialMetaTags({
         title: `Techtural Kit Home — ${model.name} (${model.code})`,
         description: `${model.name} (${model.code}) | ${model.bedrooms} Bed, ${model.bathrooms} Bath, ${model.buildingAreaSqm} m². Engineered for Papua New Guinea.`,
-        imageUrl: model.image,
+        imageUrl: thumbnailShareUrl || model.image,
         url: shareUrl,
         imageAlt: `${model.name} 3D Artist Impression Perspective`,
       });
     }
-  }, [isOpen, model, shareUrl]);
+  }, [isOpen, model, shareUrl, thumbnailShareUrl]);
 
   if (!isOpen || !model) return null;
 
@@ -96,9 +97,10 @@ ${shareUrl}`;
       let sharedWithFile = false;
       if (navigator.canShare) {
         try {
-          const response = await fetch(model.image, { mode: 'cors' });
+          const fetchTarget = thumbnailShareUrl || model.image;
+          const response = await fetch(fetchTarget, { mode: 'cors' });
           const blob = await response.blob();
-          const file = new File([blob], `${model.code}-3D-Artist-Impression.jpg`, { type: blob.type || 'image/jpeg' });
+          const file = new File([blob], `${model.code}-3D-Artist-Impression.jpg`, { type: 'image/jpeg' });
           if (navigator.canShare({ files: [file] })) {
             await navigator.share({
               title: shareTitle,
