@@ -165,6 +165,9 @@ export function generateAllSharePages() {
         model.id,
         model.code.toLowerCase()
       ];
+      if (model.officialNumber === 16) {
+        numberVariants.push('tb-kmh4b-m16');
+      }
 
       for (const variant of numberVariants) {
         const variantDir = path.join(baseDir, variant);

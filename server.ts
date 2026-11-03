@@ -183,12 +183,12 @@ const KIT_HOMES_SHARE_MAP: ModelShareMetadata[] = [
     image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M15%20TBWeb_Publish/M15%20RenderD5%20(5).jpg'
   },
   {
-    id: 'tb-kmh4b-m16',
+    id: 'tb-kmh3b-m16',
     officialNumber: 16,
-    code: 'TB-KMH4B-M16',
-    name: 'TB Highland Manor 4B',
-    bedrooms: 4,
-    bathrooms: 3,
+    code: 'TB-KMH3B-M16',
+    name: 'TB Highland Manor 3B',
+    bedrooms: 3,
+    bathrooms: 3.5,
     buildingAreaSqm: 176,
     turnkeyPrice: 563200,
     image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M16%20TBWeb_Publish/M16-Lumion%20Render-007.jpg'
@@ -248,6 +248,7 @@ function getShareMetadata(identifier: string | null | undefined): ModelShareMeta
   return KIT_HOMES_SHARE_MAP.find(m => {
     if (m.id.toLowerCase() === clean) return true;
     if (m.code.toLowerCase() === clean) return true;
+    if (clean === 'tb-kmh4b-m16' && m.officialNumber === 16) return true;
     if (String(m.officialNumber) === clean || String(m.officialNumber) === normalized) return true;
     if (!isNaN(parsedNum) && m.officialNumber === parsedNum) return true;
     if (`model-${m.officialNumber}`.toLowerCase() === clean) return true;
