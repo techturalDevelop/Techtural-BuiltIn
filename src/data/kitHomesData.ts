@@ -146,7 +146,7 @@ export const KIT_HOME_MODELS: KitHomeModel[] = [
       'Plumbing rough-in & electrical conduit pre-cut channels',
     ],
     image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M1%20TBWeb_Publish/M1-Artist_012.jpg',
-    floorPlanImage: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M1%20TBWeb_Publish/Model%201-TB-SPL1B-M1-Studio-final3.jpg',
+    floorPlanImage: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/TB%20Kit%20Residential%20Homes/M1%20TBWeb_Publish/Model%201-TB-SPL1B-M1-Studio%20Pod%20Lite%201B_Plan%20B1a.jpg',
     blueprintPrice: 750,
     constructionDrawingsPrice: 1700,
     boqBomPrice: 800,
