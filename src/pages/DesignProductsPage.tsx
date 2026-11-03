@@ -503,7 +503,7 @@ export default function DesignProductsPage({ defaultTab }: DesignProductsPagePro
                         size="sm"
                         onClick={() => openShareModal(model)}
                         className="rounded-xl px-2.5 text-xs border-border hover:bg-primary/10 hover:text-primary transition-colors cursor-pointer"
-                        title="Share on WhatsApp, Facebook, X, etc."
+                        title="Share on WhatsApp, Facebook, LinkedIn, etc."
                       >
                         <Share2 size={13} className="text-primary" />
                       </Button>

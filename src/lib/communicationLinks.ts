@@ -12,6 +12,10 @@ export const DISPLAY_PHONE = '+675 8146 4661';
 export const PRIMARY_EMAIL = 'techtural782@gmail.com';
 export const SECONDARY_EMAIL = 'gerea.george@techturalpng.com';
 
+// Official Social Channels
+export const FACEBOOK_URL = 'https://www.facebook.com/profile.php?id=61594249310814';
+export const LINKEDIN_URL = 'https://www.linkedin.com/company/techtural-builtin/';
+
 /**
  * Builds an openable wa.me link with encoded pre-filled text
  */

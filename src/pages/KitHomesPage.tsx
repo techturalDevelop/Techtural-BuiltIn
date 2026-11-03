@@ -654,7 +654,7 @@ export default function KitHomesPage() {
                             e.stopPropagation();
                             openShareModal(model);
                           }}
-                          title="Share kit home model on WhatsApp, Facebook, X, etc."
+                          title="Share kit home model on WhatsApp, Facebook, LinkedIn, etc."
                           className="px-2.5 py-1 rounded-lg bg-black/65 hover:bg-primary text-white text-xs font-semibold backdrop-blur-md border border-white/20 transition-all flex items-center gap-1 hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
                         >
                           <Share2 size={12} className="text-amber-300" />
@@ -1036,7 +1036,7 @@ export default function KitHomesPage() {
                           variant="outline"
                           className="rounded-xl h-9 px-3 text-xs font-semibold border-border/80 text-foreground hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors cursor-pointer"
                           onClick={() => openShareModal(model)}
-                          title="Share this model directly on WhatsApp, Facebook, X, or copy link"
+                          title="Share this model directly on WhatsApp, Facebook, LinkedIn, or copy link"
                         >
                           <Share2 size={13} className="mr-1 text-primary" />
                           <span>Share</span>

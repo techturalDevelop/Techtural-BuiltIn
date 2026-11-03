@@ -5,7 +5,6 @@ import {
   Check, 
   MessageSquare, 
   Facebook, 
-  Twitter, 
   Linkedin, 
   ExternalLink, 
   X, 
@@ -168,12 +167,6 @@ ${shareUrl}`;
     openShareWindow(url);
   };
 
-  const handleTwitterShare = () => {
-    const tweetText = `Explore the ${model.name} (${model.code}) Kit Home by Techtural BuiltIn — ${model.bedrooms} Bed, ${model.buildingAreaSqm} m² modern residential architecture in PNG:`;
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`;
-    openShareWindow(url);
-  };
-
   const handleLinkedInShare = () => {
     const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
     openShareWindow(url);
@@ -289,7 +282,7 @@ ${shareUrl}`;
             <label className="text-xs font-bold text-foreground uppercase tracking-wider block">
               Share With Thumbnail Directly To:
             </label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <div className="grid grid-cols-3 gap-2.5">
               {/* WhatsApp */}
               <button
                 onClick={handleWhatsAppShare}
@@ -314,18 +307,6 @@ ${shareUrl}`;
                 <span className="text-xs font-bold">Facebook</span>
               </button>
 
-              {/* X / Twitter */}
-              <button
-                onClick={handleTwitterShare}
-                className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl bg-slate-500/10 hover:bg-slate-500/20 text-foreground border border-border/80 transition-all hover:scale-102 active:scale-98 cursor-pointer group shadow-2xs"
-                title="Share on X with 3D Card"
-              >
-                <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-                  <Twitter size={18} />
-                </div>
-                <span className="text-xs font-bold">X (Twitter)</span>
-              </button>
-
               {/* LinkedIn */}
               <button
                 onClick={handleLinkedInShare}
@@ -348,7 +329,7 @@ ${shareUrl}`;
               className="w-full rounded-2xl h-11 gap-2 border-primary/30 text-primary hover:bg-primary/5 font-semibold text-xs cursor-pointer shadow-2xs"
             >
               <Smartphone size={16} />
-              <span>Share via Android / Device Apps (Instagram, Telegram, SMS)</span>
+              <span>Share via Device Apps (Messenger, SMS, etc.)</span>
             </Button>
           )}
 

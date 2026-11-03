@@ -1,7 +1,17 @@
-import { Facebook, Twitter, Linkedin, Instagram, MessageSquare } from 'lucide-react';
+import { Facebook, Linkedin, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PWAInstallButton from '@/components/PWAInstallButton';
-import { PRIMARY_WHATSAPP_NUMBER, DISPLAY_WHATSAPP, DISPLAY_PHONE, buildWhatsAppLink, buildMailtoLink, PRIMARY_EMAIL, SECONDARY_EMAIL } from '@/lib/communicationLinks';
+import { 
+  PRIMARY_WHATSAPP_NUMBER, 
+  DISPLAY_WHATSAPP, 
+  DISPLAY_PHONE, 
+  buildWhatsAppLink, 
+  buildMailtoLink, 
+  PRIMARY_EMAIL, 
+  SECONDARY_EMAIL,
+  FACEBOOK_URL,
+  LINKEDIN_URL
+} from '@/lib/communicationLinks';
 
 export default function Footer() {
   return (
@@ -30,18 +40,26 @@ export default function Footer() {
             <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
               A modern, tech-enabled building design and project management company delivering integrated solutions in PNG.
             </p>
-            <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-white transition-all">
+            <div className="flex gap-3">
+              <a 
+                href={FACEBOOK_URL} 
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Techtural BuiltIn on Facebook"
+                title="Follow Techtural BuiltIn on Facebook"
+                className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-[#1877F2] hover:text-white transition-all shadow-xs"
+              >
                 <Facebook size={18} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-white transition-all">
-                <Twitter size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-white transition-all">
+              <a 
+                href={LINKEDIN_URL} 
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Techtural BuiltIn on LinkedIn"
+                title="Connect with Techtural BuiltIn on LinkedIn"
+                className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-[#0A66C2] hover:text-white transition-all shadow-xs"
+              >
                 <Linkedin size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-white transition-all">
-                <Instagram size={18} />
               </a>
             </div>
           </div>

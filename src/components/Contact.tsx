@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, Phone, MapPin, Send, Clock, CheckCircle2, MessageSquare, ExternalLink } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Clock, CheckCircle2, MessageSquare, ExternalLink, Facebook, Linkedin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,6 +12,8 @@ import {
   DISPLAY_WHATSAPP,
   PRIMARY_EMAIL,
   SECONDARY_EMAIL,
+  FACEBOOK_URL,
+  LINKEDIN_URL,
   buildWhatsAppLink, 
   buildMailtoLink, 
   formatGeneralContactWhatsAppMessage 
@@ -191,6 +193,35 @@ export default function Contact() {
                 <div>
                   <h4 className="font-bold text-lg">Working Hours</h4>
                   <p className="text-muted-foreground">Mon - Fri: 8:00 AM - 5:00 PM</p>
+                </div>
+              </div>
+
+              {/* Official Social Channels */}
+              <div className="pt-4 border-t border-border/60">
+                <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground block mb-3">
+                  Follow Us Online
+                </span>
+                <div className="flex flex-wrap items-center gap-3">
+                  <a
+                    href={FACEBOOK_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-card hover:bg-[#1877F2] hover:text-white text-foreground text-xs font-semibold border border-border shadow-2xs transition-all hover:scale-102 active:scale-98"
+                  >
+                    <Facebook size={16} />
+                    <span>Facebook Page</span>
+                    <ExternalLink size={12} className="opacity-70 ml-0.5" />
+                  </a>
+                  <a
+                    href={LINKEDIN_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-card hover:bg-[#0A66C2] hover:text-white text-foreground text-xs font-semibold border border-border shadow-2xs transition-all hover:scale-102 active:scale-98"
+                  >
+                    <Linkedin size={16} />
+                    <span>LinkedIn Company</span>
+                    <ExternalLink size={12} className="opacity-70 ml-0.5" />
+                  </a>
                 </div>
               </div>
             </div>
