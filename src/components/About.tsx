@@ -228,19 +228,19 @@ export default function About() {
                       Mr. Neil Maino
                     </h4>
                     <p className="text-xs sm:text-sm font-semibold text-primary mt-1">
-                      Registered Structural Engineer &amp; Project Coordinator (Hybrid)
+                      Structural Engineering &amp; Project Coordinator (Hybrid)
                     </p>
                   </div>
                 </div>
 
                 <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  Certified structural engineering lead specializing in seismic and cyclone-rated structural designs, concrete and heavy steel calculations as a Registered Structural Engineer with IEPNG. Acts as hybrid technical coordinator aligning structural engineering design directly with on-site contractor operations.
+                  Structural Engineering lead specializing in seismic and cyclone-rated structural designs, concrete and heavy steel calculations as a Registered Engineer with IEPNG. Acts as hybrid technical coordinator aligning structural engineering design directly with on-site contractor operations.
                 </p>
               </div>
 
               <div className="mt-6 pt-5 border-t border-border/60 flex flex-wrap gap-2 text-xs">
                 <span className="px-2.5 py-1 rounded-lg bg-muted text-foreground/80 font-mono text-[11px] font-medium">
-                  Registered Structural Engineer with IEPNG
+                  Structural Engineering • IEPNG
                 </span>
                 <span className="px-2.5 py-1 rounded-lg bg-muted text-foreground/80 font-mono text-[11px] font-medium">
                   Hybrid Project Coordinator
