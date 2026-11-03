@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
+import crypto from 'crypto';
 import { GoogleGenAI } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
 import dotenv from 'dotenv';
@@ -490,17 +491,22 @@ app.post('/api/verify-passkey', (req, res) => {
     }
 
     const cleanKey = passkey.trim();
-    const normalizedKey = cleanKey.toUpperCase();
     const envKey = process.env.ADMIN_PASSKEY ? process.env.ADMIN_PASSKEY.trim() : null;
 
-    // Strong Admin & Engineering Passkey (Restricted to Gerea George only)
-    const strongAdminPasskey = 'TB#GereaGeorge@2026!ENG';
-    const isStrongAdminMatch = 
-      cleanKey === strongAdminPasskey || 
-      cleanKey.toUpperCase() === strongAdminPasskey.toUpperCase() ||
+    // Cryptographic one-way SHA-256 hash calculation (Plaintext is never stored in source code)
+    const inputHash = crypto.createHash('sha256').update(cleanKey).digest('hex');
+    const inputHashUpper = crypto.createHash('sha256').update(cleanKey.toUpperCase()).digest('hex');
+
+    // SHA-256 hash of Gerea George's authorized passkey
+    const GEREA_GEORGE_PASSKEY_HASH = '1db9759f6f161c532d48b5722f3f8e66f8c4e608c4bcd8b5e8d77d6c84289804';
+    const GEREA_GEORGE_PASSKEY_HASH_UPPER = '4e8cfc2807e3a6ce80d1e3895e3477e625a666e8fa134d1aa417bc03e7f4c568';
+
+    const isAuthorizedAdmin = 
+      inputHash === GEREA_GEORGE_PASSKEY_HASH ||
+      inputHashUpper === GEREA_GEORGE_PASSKEY_HASH_UPPER ||
       (envKey && cleanKey === envKey);
 
-    if (isStrongAdminMatch) {
+    if (isAuthorizedAdmin) {
       return res.status(200).json({
         success: true,
         message: 'Passkey verified successfully. Welcome, Gerea George.',
@@ -513,8 +519,9 @@ app.post('/api/verify-passkey', (req, res) => {
       });
     }
 
-    // Secondary Staff / Project Estimator Passkey (Staff tier only - no admin/engineering permissions)
-    if (normalizedKey === 'TB-STAFF-2026' || normalizedKey === 'TB-STAFF') {
+    // Secondary Staff / Estimator Passkey Hash
+    const STAFF_PASSKEY_HASH = '170bcf42a03429fa926beae08216fae54c794ce16f6b0f34c207d3bce555d4ee';
+    if (inputHashUpper === STAFF_PASSKEY_HASH) {
       return res.status(200).json({
         success: true,
         message: 'Passkey verified successfully.',
