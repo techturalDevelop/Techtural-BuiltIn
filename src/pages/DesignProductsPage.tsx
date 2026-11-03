@@ -34,6 +34,7 @@ import {
   Share2
 } from 'lucide-react';
 import { ModelShareModal } from '@/components/ModelShareModal';
+import WatermarkOverlay from '@/components/WatermarkOverlay';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -417,6 +418,7 @@ export default function DesignProductsPage({ defaultTab }: DesignProductsPagePro
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <WatermarkOverlay variant="badge" />
                     
                     <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
                       <div className="flex items-center gap-2">

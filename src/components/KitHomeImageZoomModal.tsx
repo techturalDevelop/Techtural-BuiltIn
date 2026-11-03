@@ -19,6 +19,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import WatermarkOverlay from '@/components/WatermarkOverlay';
 
 export interface PreviewImageItem {
   title: string;
@@ -339,7 +340,7 @@ export function KitHomeImageZoomModal({
               transformOrigin: 'center center',
               transition: isDragging ? 'none' : 'transform 180ms cubic-bezier(0.16, 1, 0.3, 1)',
             }}
-            className="max-w-full max-h-full flex items-center justify-center pointer-events-auto"
+            className="max-w-full max-h-full flex items-center justify-center pointer-events-auto relative overflow-hidden rounded-xl"
           >
             <img
               src={currentImage.url}
@@ -348,6 +349,7 @@ export function KitHomeImageZoomModal({
               referrerPolicy="no-referrer"
               draggable={false}
             />
+            <WatermarkOverlay variant="full" isBlueprint={currentImage.type === 'floor-plan'} />
           </div>
         </div>
 

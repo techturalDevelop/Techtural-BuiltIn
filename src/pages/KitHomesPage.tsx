@@ -45,6 +45,7 @@ import { ModelShareModal } from '@/components/ModelShareModal';
 import { KitHomeImageZoomModal, PreviewImageItem } from '@/components/KitHomeImageZoomModal';
 import { KitHomeDisplayPreviewBox } from '@/components/KitHomeDisplayPreviewBox';
 import { KitHomeScopeOfWorksModal } from '@/components/KitHomeScopeOfWorksModal';
+import WatermarkOverlay from '@/components/WatermarkOverlay';
 import { KIT_HOME_FINISH_OPTIONS, getFinishOptionsForModel } from '@/data/kitHomesFinishesData';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -628,6 +629,7 @@ export default function KitHomesPage() {
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+                    <WatermarkOverlay variant="badge" />
                     
                     {/* Badges on Image */}
                     <div className="absolute top-4 left-4 right-4 flex items-center justify-between">

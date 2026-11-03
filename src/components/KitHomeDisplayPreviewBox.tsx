@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { KitHomeModel } from '@/data/kitHomesData';
+import WatermarkOverlay from '@/components/WatermarkOverlay';
 
 interface KitHomeDisplayPreviewBoxProps {
   model: KitHomeModel;
@@ -282,7 +283,7 @@ export function KitHomeDisplayPreviewBox({
               transformOrigin: 'center center',
               transition: isDragging ? 'none' : 'transform 180ms cubic-bezier(0.16, 1, 0.3, 1)',
             }}
-            className="max-w-full max-h-full flex items-center justify-center"
+            className="max-w-full max-h-full flex items-center justify-center relative overflow-hidden rounded-lg"
           >
             <img
               src={currentImageUrl}
@@ -291,6 +292,7 @@ export function KitHomeDisplayPreviewBox({
               referrerPolicy="no-referrer"
               draggable={false}
             />
+            <WatermarkOverlay variant="full" isBlueprint={activeView === 'blueprint'} />
           </div>
         </div>
 

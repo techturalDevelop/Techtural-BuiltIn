@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { KitHomeModel } from '@/data/kitHomesData';
 import { updateSocialMetaTags } from '@/lib/seoMeta';
+import WatermarkOverlay from '@/components/WatermarkOverlay';
 
 interface ModelShareModalProps {
   model: KitHomeModel | null;
@@ -189,6 +190,7 @@ ${shareUrl}`;
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <WatermarkOverlay variant="badge" />
               
               {/* Badges on Thumbnail */}
               <div className="absolute top-3 left-3 flex items-center gap-1.5 flex-wrap">
