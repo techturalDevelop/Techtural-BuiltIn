@@ -774,7 +774,7 @@ export default function KitHomesPage() {
                             <FileText size={12} />
                           </div>
                           <div>
-                            <span className="font-semibold text-foreground">Blueprint PDF Pack</span>
+                            <span className="font-semibold text-foreground">Blueprint Secure PDF Format</span>
                             <span className="ml-1.5 text-[10px] text-muted-foreground">(Plans with Dimensions &amp; Elevations)</span>
                           </div>
                         </div>
@@ -1492,7 +1492,7 @@ export default function KitHomesPage() {
                                 onCheckedChange={(c) => setCustomSelections(p => ({ ...p, includeBlueprint: !!c }))}
                               />
                               <label htmlFor="inc-bp" className="text-xs font-medium cursor-pointer">
-                                <strong>Blueprint PDF Pack</strong> (Plans with Dimensions &amp; Elevations)
+                                <strong>Blueprint Secure PDF Format</strong> (Plans with Dimensions &amp; Elevations)
                               </label>
                             </div>
                             <span className="text-xs font-bold text-foreground">
@@ -1969,7 +1969,7 @@ export default function KitHomesPage() {
                                 <DraftingCompass size={17} />
                               </div>
                               <div>
-                                <h4 className="text-sm font-extrabold text-foreground">Blueprint PDF Pack</h4>
+                                <h4 className="text-sm font-extrabold text-foreground">Blueprint Secure PDF Format</h4>
                                 <p className="text-[11px] text-muted-foreground">Plans with Dimensions &amp; Elevations</p>
                               </div>
                             </div>
@@ -2006,7 +2006,7 @@ export default function KitHomesPage() {
                           {/* Dimensions Issuance Policy Callout */}
                           <div className="p-2.5 rounded-xl bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200/50 dark:border-blue-900/40 text-[11px] text-blue-900 dark:text-blue-200 flex items-start gap-2">
                             <DraftingCompass size={14} className="text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
-                            <span><strong>Certified Blueprint Notice:</strong> All complete CAD floor plan dimensions and elevation drawings are issued when customers purchase the Blueprint PDF Copy.</span>
+                            <span><strong>Certified Blueprint Notice:</strong> All complete CAD floor plan dimensions and elevation drawings are issued when customers purchase the Blueprint Secure PDF Format.</span>
                           </div>
 
                           {/* Quick CTA to Switch to Quote Builder */}
@@ -2090,12 +2090,12 @@ export default function KitHomesPage() {
                                 onChange={(e) => setQuoteForm(p => ({ ...p, targetTimeline: e.target.value }))}
                                 className="w-full h-9 px-2 text-xs rounded-lg border border-input bg-background mt-1"
                               >
-                                <option value="Blueprint PDF Pack (Plans & Elevations)">Blueprint PDF Pack — Plans &amp; Elevations (K{activeModel.blueprintPrice.toLocaleString()})</option>
+                                <option value="Blueprint Secure PDF Format (Plans & Elevations)">Blueprint Secure PDF Format — Plans &amp; Elevations (K{activeModel.blueprintPrice.toLocaleString()})</option>
                                 {activeModel.constructionDrawingsPrice && (
                                   <option value="Complete Construction Drawings & Design">Complete Construction Drawings &amp; Design (K{activeModel.constructionDrawingsPrice.toLocaleString()})</option>
                                 )}
                                 <option value="Complete BOQ & Material Listing Copy">Complete BOQ &amp; Material Listing Copy (+K{activeModel.boqBomPrice.toLocaleString()})</option>
-                                <option value="Blueprint + Complete BOQ & Material Listing">Blueprint + Complete BOQ &amp; Material Listing (K{(activeModel.blueprintPrice + activeModel.boqBomPrice).toLocaleString()})</option>
+                                <option value="Blueprint Secure PDF Format + Complete BOQ & Material Listing">Blueprint Secure PDF Format + Complete BOQ &amp; Material Listing (K{(activeModel.blueprintPrice + activeModel.boqBomPrice).toLocaleString()})</option>
                                 {activeModel.constructionDrawingsPrice && (
                                   <option value="Complete Drawings + BOQ & Material Listing">Complete Drawings + BOQ &amp; Material Listing (K{(activeModel.constructionDrawingsPrice + activeModel.boqBomPrice).toLocaleString()})</option>
                                 )}

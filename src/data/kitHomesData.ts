@@ -1114,8 +1114,8 @@ export const KIT_HOME_MODELS: KitHomeModel[] = [
 export const PACKAGE_TIERS_INFO = [
   {
     id: 'blueprint',
-    name: 'Preferred Design Blueprint',
-    shortDesc: 'Certified architectural & engineering working drawings',
+    name: 'Blueprint Secure PDF Format',
+    shortDesc: 'Certified architectural & engineering working drawings (Secure PDF)',
     icon: 'FileText',
     color: 'blue',
     description: 'Full architectural working drawings, structural engineering calculations (AS/NZS & PNG Building Code compliant), electrical schematics, and plumbing layouts ready for local municipal approval.',

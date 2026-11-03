@@ -68,7 +68,7 @@ export function formatKitHomeQuoteWhatsAppMessage(params: {
     params.isFullTurnKey 
       ? `• Full Turn-Key Construction Contract Included ${isPending ? '(Handover Costing in Progress)' : ''}`
       : [
-          params.selections.includeBlueprint ? `• Certified Blueprint Package` : null,
+          params.selections.includeBlueprint ? `• Certified Blueprint Secure PDF Format` : null,
           params.selections.includeBoqBom ? `• Detailed BOQ & BOM Trade Schedule` : null,
           params.selections.includeKitMaterials ? `• Kitset Structural Materials Supply` : null,
           params.selections.includeProjectManagement ? `• Construction & Project Supervision` : null,
@@ -154,7 +154,7 @@ export function formatBlueprintInquiryWhatsAppMessage(params: {
     `----------------------------------------`,
     `*Model:* ${params.modelName} (${params.modelCode}${params.officialNumber ? ` #${String(params.officialNumber).padStart(2, '0')}` : ''})`,
     `*Selected Scope:* ${params.selectedScope}`,
-    `*Standard Blueprint Price:* PGK ${params.blueprintPrice.toLocaleString()}`,
+    `*Blueprint Secure PDF Format Price:* PGK ${params.blueprintPrice.toLocaleString()}`,
     ``,
     `*Client Details:*`,
     `• Name: ${params.clientName?.trim() || 'Not specified'}`,

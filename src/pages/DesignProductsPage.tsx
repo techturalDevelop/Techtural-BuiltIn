@@ -470,7 +470,7 @@ export default function DesignProductsPage({ defaultTab }: DesignProductsPagePro
 
                     <div className="p-3 rounded-xl bg-muted/40 border border-border/60 text-xs space-y-1.5">
                       <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Blueprint CAD:</span>
+                        <span className="text-muted-foreground">Blueprint Secure PDF Format:</span>
                         <span className="font-bold font-mono text-foreground">PGK {model.blueprintPrice.toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between items-center">
@@ -735,7 +735,7 @@ export default function DesignProductsPage({ defaultTab }: DesignProductsPagePro
                           ) : (
                             <div className="p-3 rounded-xl bg-muted/40 border border-border/60 text-xs space-y-1.5">
                               <div className="flex justify-between items-center">
-                                <span className="text-muted-foreground">Blueprint &amp; CAD:</span>
+                                <span className="text-muted-foreground">Blueprint Secure PDF Format:</span>
                                 <span className="font-bold font-mono text-foreground">PGK {item.blueprintPrice.toLocaleString()}</span>
                               </div>
                               <div className="flex justify-between items-center">
@@ -827,7 +827,7 @@ export default function DesignProductsPage({ defaultTab }: DesignProductsPagePro
         <Accordion className="w-full space-y-3">
           <AccordionItem value="faq-1" className="border border-border/80 rounded-xl px-4 bg-card/40">
             <AccordionTrigger className="text-xs sm:text-sm font-semibold text-foreground hover:no-underline">
-              What is included in the Blueprint &amp; CAD Package?
+              What is included in the Blueprint Secure PDF Format Package?
             </AccordionTrigger>
             <AccordionContent className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
               Our Blueprint package contains full architectural working drawings (plans, elevations, cross-sections), structural engineering framing calculations (wind rated up to PNG Category C2 &amp; seismic standards), electrical wiring schematics, and plumbing reticulation diagrams ready for Physical Planning Board approval.
@@ -989,7 +989,7 @@ export default function DesignProductsPage({ defaultTab }: DesignProductsPagePro
                         <div className="p-2.5 rounded-xl bg-card border border-border flex items-start gap-2 shadow-2xs">
                           <CheckCircle2 size={13} className="text-amber-600 shrink-0 mt-0.5" />
                           <div>
-                            <span className="font-semibold text-foreground">1. Certified Blueprints &amp; CAD</span>
+                            <span className="font-semibold text-foreground">1. Certified Blueprint Secure PDF Format</span>
                             <p className="text-[10px] text-muted-foreground">Planning board approved drawings (In progress)</p>
                           </div>
                         </div>
@@ -1026,7 +1026,7 @@ export default function DesignProductsPage({ defaultTab }: DesignProductsPagePro
                     <div className="divide-y divide-border text-xs">
                       <div className="px-4 py-2 flex justify-between items-center">
                         <div>
-                          <span className="font-semibold text-foreground">1. Full Architectural Blueprint &amp; CAD</span>
+                          <span className="font-semibold text-foreground">1. Full Architectural Blueprint Secure PDF Format</span>
                           <p className="text-[10px] text-muted-foreground">Planning board approved drawings</p>
                         </div>
                         <span className="font-mono font-bold">PGK {selectedProduct.blueprintPrice.toLocaleString()}</span>
@@ -1225,7 +1225,7 @@ export default function DesignProductsPage({ defaultTab }: DesignProductsPagePro
                     <option value="turnkey">Full Turn-Key Handover (Recommended)</option>
                     <option value="kitset">Kitset Structural Materials Pack</option>
                     <option value="boq">Blueprint + BOQ &amp; BOM Package</option>
-                    <option value="blueprint">Blueprint &amp; CAD Plans Only</option>
+                    <option value="blueprint">Blueprint Secure PDF Format Only</option>
                   </select>
                 </div>
 

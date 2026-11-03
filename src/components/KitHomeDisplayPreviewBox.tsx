@@ -432,7 +432,7 @@ export function KitHomeDisplayPreviewBox({
           <span className="hidden sm:inline">•</span>
           {activeView === 'blueprint' ? (
             <span className="text-blue-600 dark:text-blue-400 font-medium">
-              Note: Full floor plan dimensions, CAD drafting &amp; elevations are issued when customers purchase the Blueprint PDF Copy (K{model.blueprintPrice.toLocaleString()}).
+              Note: Full floor plan dimensions, drafting &amp; elevations are issued when customers purchase the Blueprint Secure PDF Format (K{model.blueprintPrice.toLocaleString()}).
             </span>
           ) : (
             <span className="hidden sm:inline">Use mouse wheel or drag to inspect architectural details</span>

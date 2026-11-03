@@ -68,7 +68,7 @@ export const ModelShareModal: React.FC<ModelShareModalProps> = ({
   const whatsappText = `🏡 *Techtural BuiltIn Kit Home — ${model.name} (${model.code})*
 📐 *Area:* ${model.buildingAreaSqm} m² | 🛏️ *Bedrooms:* ${model.bedrooms} | 🚿 *Bathrooms:* ${model.bathrooms}
 💰 *Turn-Key Handover:* ${turnkeyText}
-📋 *Certified Blueprint CAD:* PGK ${model.blueprintPrice.toLocaleString()}
+📋 *Certified Blueprint Secure PDF Format:* PGK ${model.blueprintPrice.toLocaleString()}
 
 🖼️ *3D Artist Impression Preview & Specifications:*
 ${shareUrl}`;

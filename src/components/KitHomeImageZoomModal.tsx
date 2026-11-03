@@ -370,7 +370,7 @@ export function KitHomeImageZoomModal({
           <div className="absolute top-4 right-16 sm:right-20 z-20 pointer-events-none max-w-[50vw] sm:max-w-md hidden md:block">
             <div className="px-3 py-1.5 rounded-xl bg-slate-950/85 backdrop-blur-md border border-blue-500/30 text-blue-200 text-xs font-sans shadow-lg flex items-center gap-1.5">
               <DraftingCompass size={13} className="text-blue-400 shrink-0" />
-              <span>Full certified dimensions &amp; elevations issued upon Blueprint PDF purchase.</span>
+              <span>Full certified dimensions &amp; elevations issued upon Blueprint Secure PDF Format purchase.</span>
             </div>
           </div>
         )}
