@@ -75,6 +75,7 @@ import {
   PRIMARY_EMAIL,
   buildWhatsAppLink, 
   buildMailtoLink,
+  logPortalWhatsAppInquiry,
   formatKitHomeQuoteWhatsAppMessage,
   formatBlueprintInquiryWhatsAppMessage 
 } from '@/lib/communicationLinks';
@@ -1830,6 +1831,33 @@ export default function KitHomesPage() {
                                   )}
                                   target="_blank"
                                   rel="noopener noreferrer"
+                                  onClick={() => {
+                                    const msg = formatKitHomeQuoteWhatsAppMessage({
+                                      modelName: activeModel.name,
+                                      modelCode: activeModel.code,
+                                      officialNumber: activeModel.officialNumber,
+                                      calculatedTotal: modalCalculatedTotal,
+                                      isFullTurnKey: customSelections.isFullTurnKey,
+                                      isTurnKeyCostingInProgress: activeModel.isTurnKeyCostingInProgress,
+                                      selections: customSelections,
+                                      clientName: quoteForm.clientName,
+                                      clientPhone: quoteForm.clientPhone,
+                                      clientEmail: quoteForm.clientEmail,
+                                      plotLocation: quoteForm.plotLocation,
+                                      targetTimeline: quoteForm.targetTimeline,
+                                      notes: quoteForm.notes,
+                                    });
+                                    logPortalWhatsAppInquiry({
+                                      modelCode: activeModel.code,
+                                      modelName: activeModel.name,
+                                      message: msg,
+                                      clientName: quoteForm.clientName || 'Kit Home Inquirer',
+                                      clientPhone: quoteForm.clientPhone,
+                                      clientEmail: quoteForm.clientEmail,
+                                      location: quoteForm.plotLocation,
+                                      calculatedTotal: modalCalculatedTotal,
+                                    });
+                                  }}
                                   className="inline-flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors"
                                 >
                                   <MessageSquare size={14} />

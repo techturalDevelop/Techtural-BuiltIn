@@ -294,47 +294,53 @@ app.get('/api/health', (req, res) => {
 // In-memory store for portal inquiries & consultation requests
 interface StoredInquiry {
   id: string;
-  type: 'contact_message' | 'project_consultation';
+  type: 'contact_message' | 'project_consultation' | 'whatsapp_inquiry';
   name: string;
-  email: string;
+  email?: string;
   phone?: string;
   subject?: string;
   message?: string;
+  modelCode?: string;
+  modelName?: string;
   projectType?: string;
   service?: string;
   location?: string;
   budget?: string;
   details?: any;
-  status: 'new' | 'reviewed' | 'contacted';
+  status: 'new' | 'reviewed' | 'contacted' | 'quoted' | 'archived';
   receivedAt: string;
 }
 
-const inMemoryInquiries: StoredInquiry[] = [
-  {
-    id: 'req-init-01',
-    type: 'project_consultation',
-    name: 'George Vele',
-    email: 'g.vele@example.com.pg',
-    phone: '+675 7234 5678',
-    projectType: 'residential',
-    service: 'Full Turnkey Construction - Kit Home Haus Kumul (TB-SPL1B-01)',
-    location: 'Port Moresby (Waigani)',
-    budget: 'K500k - K2M',
-    status: 'reviewed',
-    receivedAt: new Date(Date.now() - 3600000 * 24).toISOString()
-  },
-  {
-    id: 'msg-init-02',
-    type: 'contact_message',
-    name: 'Sarah Kuman',
-    email: 'sarah.k@miningpng.com',
-    phone: '+675 7198 2345',
-    subject: 'Commercial Office Space & Warehouse Tender',
-    message: 'We are seeking certified architectural drawings and quantity surveying for a 2-storey office and storage facility in Lae Morobe Province.',
-    status: 'new',
-    receivedAt: new Date(Date.now() - 3600000 * 6).toISOString()
+// Persistent production inquiry store for live submissions
+const INQUIRIES_STORAGE_FILE = path.join(process.cwd(), 'data', 'production_inquiries.json');
+
+function loadProductionInquiries(): StoredInquiry[] {
+  try {
+    if (fs.existsSync(INQUIRIES_STORAGE_FILE)) {
+      const raw = fs.readFileSync(INQUIRIES_STORAGE_FILE, 'utf-8');
+      const data = JSON.parse(raw);
+      if (Array.isArray(data)) return data;
+    }
+  } catch (err) {
+    console.warn('Production inquiries store initialized empty.');
   }
-];
+  return [];
+}
+
+function saveProductionInquiries(list: StoredInquiry[]) {
+  try {
+    const dir = path.dirname(INQUIRIES_STORAGE_FILE);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    fs.writeFileSync(INQUIRIES_STORAGE_FILE, JSON.stringify(list, null, 2), 'utf-8');
+  } catch (err) {
+    console.error('Error saving production inquiries to disk:', err);
+  }
+}
+
+// Strictly live production inquiries (starts completely empty, zero demo data)
+const inMemoryInquiries: StoredInquiry[] = loadProductionInquiries();
 
 // POST /api/contact-message (Portal Inbox fallback)
 app.post('/api/contact-message', (req, res) => {
@@ -357,6 +363,7 @@ app.post('/api/contact-message', (req, res) => {
     };
 
     inMemoryInquiries.unshift(record);
+    saveProductionInquiries(inMemoryInquiries);
     console.log(`[PORTAL INBOX] New Contact Message received from ${record.name} (${record.email}) - "${record.subject}"`);
 
     return res.status(200).json({
@@ -394,6 +401,7 @@ app.post('/api/project-request', (req, res) => {
     };
 
     inMemoryInquiries.unshift(record);
+    saveProductionInquiries(inMemoryInquiries);
     console.log(`[PROJECT DESK] New Consultation Request from ${record.name} (${record.email}) - Service: ${record.service}`);
 
     return res.status(200).json({
@@ -414,6 +422,119 @@ app.get('/api/inquiries', (req, res) => {
     total: inMemoryInquiries.length,
     inquiries: inMemoryInquiries
   });
+});
+
+// POST /api/whatsapp-inquiry (Automatic backend logging when user initiates WhatsApp contact)
+app.post('/api/whatsapp-inquiry', (req, res) => {
+  try {
+    const { modelCode, modelName, message, clientName, clientPhone, clientEmail, location, calculatedTotal } = req.body || {};
+
+    const record: StoredInquiry = {
+      id: `wa-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      type: 'whatsapp_inquiry',
+      name: clientName ? String(clientName).trim() : 'WhatsApp Direct Lead',
+      email: clientEmail ? String(clientEmail).trim().toLowerCase() : undefined,
+      phone: clientPhone ? String(clientPhone).trim() : undefined,
+      modelCode: modelCode ? String(modelCode).trim() : undefined,
+      modelName: modelName ? String(modelName).trim() : undefined,
+      location: location ? String(location).trim() : 'Papua New Guinea',
+      subject: modelCode ? `WhatsApp Inquiry: ${modelName || modelCode}` : 'General WhatsApp Contact',
+      message: message ? String(message).trim() : 'Customer initiated direct WhatsApp consultation',
+      budget: calculatedTotal ? `K${Number(calculatedTotal).toLocaleString()}` : undefined,
+      status: 'new',
+      receivedAt: new Date().toISOString()
+    };
+
+    inMemoryInquiries.unshift(record);
+    saveProductionInquiries(inMemoryInquiries);
+    console.log(`[WHATSAPP DESK] Logged inquiry for ${record.modelCode || 'general'} from ${record.name} (${record.phone || 'No phone'})`);
+
+    return res.status(201).json({
+      success: true,
+      inquiry: record,
+      message: 'WhatsApp inquiry logged into Techtural Backend Desk.'
+    });
+  } catch (err: any) {
+    console.error('Error logging WhatsApp inquiry:', err);
+    return res.status(500).json({ error: 'Failed to record WhatsApp inquiry.' });
+  }
+});
+
+// PATCH /api/inquiries/:id/status (Review & update inquiry lifecycle status)
+app.patch('/api/inquiries/:id/status', (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const target = inMemoryInquiries.find(item => item.id === id);
+    if (!target) {
+      return res.status(404).json({ error: 'Inquiry record not found.' });
+    }
+
+    if (['new', 'reviewed', 'contacted', 'quoted', 'archived'].includes(status)) {
+      target.status = status;
+      saveProductionInquiries(inMemoryInquiries);
+      return res.status(200).json({ success: true, inquiry: target });
+    }
+    return res.status(400).json({ error: 'Invalid status parameter.' });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to update status.' });
+  }
+});
+
+// POST /api/verify-passkey (Authorized Personnel Passkey Verification)
+app.post('/api/verify-passkey', (req, res) => {
+  try {
+    const { passkey } = req.body || {};
+    if (!passkey || typeof passkey !== 'string') {
+      return res.status(400).json({ success: false, message: 'Passkey is required.' });
+    }
+
+    const cleanKey = passkey.trim();
+    const normalizedKey = cleanKey.toUpperCase();
+    const envKey = process.env.ADMIN_PASSKEY ? process.env.ADMIN_PASSKEY.trim() : null;
+
+    // Strong Admin & Engineering Passkey (Restricted to Gerea George only)
+    const strongAdminPasskey = 'TB#GereaGeorge@2026!ENG';
+    const isStrongAdminMatch = 
+      cleanKey === strongAdminPasskey || 
+      cleanKey.toUpperCase() === strongAdminPasskey.toUpperCase() ||
+      (envKey && cleanKey === envKey);
+
+    if (isStrongAdminMatch) {
+      return res.status(200).json({
+        success: true,
+        message: 'Passkey verified successfully. Welcome, Gerea George.',
+        user: {
+          uid: 'tb-admin-gerea-george',
+          displayName: 'Gerea George',
+          role: 'admin',
+          title: 'Managing Director & Principal'
+        }
+      });
+    }
+
+    // Secondary Staff / Project Estimator Passkey (Staff tier only - no admin/engineering permissions)
+    if (normalizedKey === 'TB-STAFF-2026' || normalizedKey === 'TB-STAFF') {
+      return res.status(200).json({
+        success: true,
+        message: 'Passkey verified successfully.',
+        user: {
+          uid: 'tb-staff-member',
+          displayName: 'Techtural Staff',
+          role: 'staff',
+          title: 'Project Estimator'
+        }
+      });
+    }
+
+    return res.status(401).json({
+      success: false,
+      message: 'Invalid passkey. Access denied.'
+    });
+  } catch (err) {
+    console.error('Error in /api/verify-passkey:', err);
+    return res.status(500).json({ success: false, message: 'Authentication server error.' });
+  }
 });
 
 // Helper to run promise with timeout

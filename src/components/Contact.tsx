@@ -16,6 +16,7 @@ import {
   LINKEDIN_URL,
   buildWhatsAppLink, 
   buildMailtoLink, 
+  logPortalWhatsAppInquiry,
   formatGeneralContactWhatsAppMessage 
 } from '@/lib/communicationLinks';
 
@@ -407,6 +408,19 @@ export default function Contact() {
                         )}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() => {
+                          const msg = formatGeneralContactWhatsAppMessage({
+                            name: formData.name || 'Website Visitor',
+                            email: formData.email || 'Not provided',
+                            subject: formData.subject || 'General Inquiry',
+                            message: formData.message || 'Hi, I would like to get in touch regarding a project.'
+                          });
+                          logPortalWhatsAppInquiry({
+                            message: msg,
+                            clientName: formData.name || 'Website Visitor',
+                            clientEmail: formData.email,
+                          });
+                        }}
                         className="inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-xs transition-colors"
                       >
                         <MessageSquare size={16} />

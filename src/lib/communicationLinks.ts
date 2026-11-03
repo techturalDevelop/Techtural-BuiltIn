@@ -25,6 +25,29 @@ export function buildWhatsAppLink(message: string, phone: string = PRIMARY_WHATS
 }
 
 /**
+ * Automatically logs WhatsApp inquiries to the backend portal desk before launching chat
+ */
+export function logPortalWhatsAppInquiry(data: {
+  modelCode?: string;
+  modelName?: string;
+  message: string;
+  clientName?: string;
+  clientPhone?: string;
+  clientEmail?: string;
+  location?: string;
+  calculatedTotal?: number;
+}) {
+  try {
+    fetch('/api/whatsapp-inquiry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+      keepalive: true,
+    }).catch(err => console.warn('Non-fatal WhatsApp logging:', err));
+  } catch (_) {}
+}
+
+/**
  * Builds an openable mailto link with encoded subject and body
  */
 export function buildMailtoLink(subject: string, body: string, recipient: string = PRIMARY_EMAIL): string {

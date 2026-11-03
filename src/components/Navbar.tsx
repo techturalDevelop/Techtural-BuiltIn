@@ -22,16 +22,21 @@ import {
   ShieldCheck,
   ArrowRight,
   GraduationCap,
-  Lock
+  Lock,
+  KeyRound,
+  Inbox
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import ProjectDiscoveryModal from './ProjectDiscoveryModal';
+import PasskeySignInModal from './PasskeySignInModal';
+import PortalInquiriesModal from './PortalInquiriesModal';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { auth, signInWithGoogle, logout } from '@/lib/firebase';
+import { auth, logout } from '@/lib/firebase';
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 import { toast } from 'sonner';
 import PWAInstallButton from '@/components/PWAInstallButton';
+import { getStoredPasskeyUser, logoutPasskeyUser, PasskeyUser } from '@/lib/passkeyAuth';
 
 import { Link, useLocation } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
@@ -136,6 +141,9 @@ export default function Navbar() {
   const [isServicesMenuOpen, setIsServicesMenuOpen] = useState(false);
   const [isTechMenuOpen, setIsTechMenuOpen] = useState(false);
   const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [passkeyUser, setPasskeyUser] = useState<PasskeyUser | null>(() => getStoredPasskeyUser());
+  const [isPasskeyModalOpen, setIsPasskeyModalOpen] = useState(false);
+  const [isPortalModalOpen, setIsPortalModalOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -146,15 +154,15 @@ export default function Navbar() {
   }, []);
 
   const handleLogin = () => {
-    toast.info('Sign In is temporarily frozen while backend functions and security rules are being deployed & verified.', {
-      description: 'All public estimation tools, kit home specifications, blueprints, and quote submissions remain fully operational.'
-    });
+    setIsPasskeyModalOpen(true);
   };
 
   const handleLogout = async () => {
     try {
-      await logout();
-      toast.success('Signed out successfully');
+      await logoutPasskeyUser();
+      setPasskeyUser(null);
+      setUser(null);
+      toast.success('Signed out of Techtural portal');
     } catch (error) {
       toast.error('Logout failed');
     }
@@ -409,47 +417,79 @@ export default function Navbar() {
           </HashLink>
 
           <div className="flex items-center gap-4 ml-4 pl-4 border-l border-border/50">
-            {user ? (
-              <Popover>
-                <PopoverTrigger className="flex items-center gap-2 outline-none group">
-                  <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/20 group-hover:border-primary transition-colors">
-                    {user.photoURL ? (
-                      <img src={user.photoURL} alt={user.displayName || 'User'} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                    ) : (
-                      <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary">
-                        <User size={16} />
+            {(passkeyUser || user) ? (
+              <div className="flex items-center gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setIsPortalModalOpen(true)}
+                  className="rounded-full h-8 px-3 gap-1.5 border-primary/40 bg-primary/10 hover:bg-primary/20 text-primary text-xs font-bold cursor-pointer shadow-2xs"
+                  title="Open Admin Desk (Review inquiries, generate quotes & milestone invoices)"
+                >
+                  <Inbox size={13} />
+                  <span>Admin Desk</span>
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                </Button>
+
+                <Popover>
+                  <PopoverTrigger className="flex items-center gap-2 outline-none group cursor-pointer">
+                    <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/40 group-hover:border-primary transition-colors flex items-center justify-center bg-primary/10 text-primary font-bold text-xs">
+                      {user?.photoURL ? (
+                        <img src={user.photoURL} alt={passkeyUser?.displayName || user?.displayName || 'User'} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                      ) : (
+                        <span>{(passkeyUser?.displayName || user?.displayName || 'G').charAt(0)}</span>
+                      )}
+                    </div>
+                    <div className="hidden lg:flex flex-col text-left">
+                      <span className="text-xs font-bold leading-tight truncate max-w-[120px]">
+                        {passkeyUser?.displayName || user?.displayName || 'Personnel'}
+                      </span>
+                      <span className="text-[10px] text-amber-500 font-mono font-bold uppercase tracking-wider">
+                        {passkeyUser?.role || 'Staff'}
+                      </span>
+                    </div>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-64 p-3 rounded-2xl shadow-2xl border-border/80" align="end">
+                    <div className="px-2 py-1.5 mb-2 border-b border-border/50">
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        <span className="text-[10px] font-mono uppercase text-emerald-500 font-bold">Authorized Passkey Active</span>
                       </div>
-                    )}
-                  </div>
-                </PopoverTrigger>
-                <PopoverContent className="w-56 p-2 rounded-2xl shadow-2xl border-border/50" align="end">
-                  <div className="px-3 py-2 mb-2 border-b border-border/50">
-                    <p className="text-sm font-bold truncate">{user.displayName || 'User'}</p>
-                    <p className="text-[10px] text-muted-foreground truncate">{user.email}</p>
-                  </div>
-                  <Button 
-                    variant="ghost" 
-                    className="w-full justify-start gap-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-xl"
-                    onClick={handleLogout}
-                  >
-                    <LogOut size={16} />
-                    Sign Out
-                  </Button>
-                </PopoverContent>
-              </Popover>
+                      <p className="text-sm font-bold truncate text-foreground">{passkeyUser?.displayName || user?.displayName || 'Gerea George'}</p>
+                      <p className="text-xs font-mono text-muted-foreground uppercase">{passkeyUser?.role || 'Admin'} Access</p>
+                    </div>
+
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsPortalModalOpen(true)}
+                      className="w-full justify-start gap-2 rounded-xl text-xs font-bold mb-2 border-primary/40 text-primary hover:bg-primary/10 cursor-pointer"
+                    >
+                      <Inbox size={14} />
+                      <span>Inquiries &amp; Quick Quotes</span>
+                    </Button>
+
+                    <Button 
+                      variant="ghost" 
+                      className="w-full justify-start gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 rounded-xl text-xs font-semibold cursor-pointer"
+                      onClick={handleLogout}
+                    >
+                      <LogOut size={15} />
+                      <span>Sign Out</span>
+                    </Button>
+                  </PopoverContent>
+                </Popover>
+              </div>
             ) : (
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="rounded-full gap-1.5 text-muted-foreground hover:text-foreground border border-border/60 bg-muted/40 hover:bg-muted/70 transition-all text-xs font-semibold cursor-pointer shadow-2xs"
+                className="rounded-full gap-1.5 text-foreground hover:text-primary border border-border/80 bg-muted/50 hover:bg-muted transition-all text-xs font-semibold cursor-pointer shadow-2xs"
                 onClick={handleLogin}
-                title="Sign In is temporarily frozen while backend functions and security rules are being deployed."
+                title="Sign in with your authorized Techtural passkey"
               >
-                <Lock size={13} className="text-amber-500" />
+                <KeyRound size={13} className="text-primary" />
                 <span>Sign In</span>
-                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 uppercase tracking-wider">
-                  Frozen
-                </span>
               </Button>
             )}
             <PWAInstallButton variant="nav" />
@@ -642,17 +682,38 @@ export default function Navbar() {
 
               <button
                 type="button"
-                onClick={handleLogin}
-                className="w-full mt-3 flex items-center justify-between p-3 rounded-xl bg-muted/40 border border-border/60 text-xs font-medium text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  if (passkeyUser || user) {
+                    handleLogout();
+                  } else {
+                    handleLogin();
+                  }
+                }}
+                className="w-full mt-3 flex items-center justify-between p-3 rounded-xl bg-muted/50 border border-border/80 text-xs font-semibold text-foreground hover:text-primary cursor-pointer transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  <Lock size={14} className="text-amber-500" />
-                  <span className="font-semibold text-foreground">Sign In</span>
+                  <KeyRound size={14} className="text-primary" />
+                  <span>{passkeyUser ? `${passkeyUser.displayName} (${passkeyUser.role.toUpperCase()})` : 'Sign In with Passkey'}</span>
                 </div>
-                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 uppercase tracking-wider">
-                  Frozen
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20 uppercase tracking-wider">
+                  {passkeyUser ? 'Sign Out' : 'Portal'}
                 </span>
               </button>
+
+              {passkeyUser && (
+                <Button 
+                  variant="outline"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    setIsPortalModalOpen(true);
+                  }}
+                  className="w-full mt-2 justify-start gap-2 rounded-xl text-xs font-bold border-primary/40 text-primary bg-primary/5"
+                >
+                  <Inbox size={14} />
+                  <span>Open Admin Desk (Inquiries &amp; Quotes)</span>
+                </Button>
+              )}
 
               <div className="mt-3">
                 <PWAInstallButton variant="banner" />
@@ -675,6 +736,18 @@ export default function Navbar() {
       <ProjectDiscoveryModal 
         isOpen={isDiscoveryOpen} 
         onClose={() => setIsDiscoveryOpen(false)} 
+      />
+
+      <PasskeySignInModal
+        isOpen={isPasskeyModalOpen}
+        onClose={() => setIsPasskeyModalOpen(false)}
+        onSuccess={(pUser) => setPasskeyUser(pUser)}
+      />
+
+      <PortalInquiriesModal
+        isOpen={isPortalModalOpen}
+        onClose={() => setIsPortalModalOpen(false)}
+        adminName={passkeyUser?.displayName || 'Gerea George'}
       />
     </nav>
   );
