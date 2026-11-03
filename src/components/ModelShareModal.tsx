@@ -13,7 +13,6 @@ import {
   Bath,
   Maximize2,
   Smartphone,
-  Download,
   Image as ImageIcon,
   CheckCircle2
 } from 'lucide-react';
@@ -34,7 +33,6 @@ export const ModelShareModal: React.FC<ModelShareModalProps> = ({
   onClose,
 }) => {
   const [copied, setCopied] = useState(false);
-  const [isDownloading, setIsDownloading] = useState(false);
 
   // Generate dedicated static share URL pointing specifically to this kit home model's 3D OpenGraph card
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://techturalbuiltin.com';
@@ -125,31 +123,6 @@ ${shareUrl}`;
       }
     } catch (err) {
       // User dismissed native share sheet
-    }
-  };
-
-  const handleDownloadImage = async () => {
-    setIsDownloading(true);
-    try {
-      const response = await fetch(model.image);
-      const blob = await response.blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = blobUrl;
-      link.download = `Techtural_${model.code}_3D_Artist_Impression.jpg`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(blobUrl);
-      toast.success('3D Artist Impression Image downloaded!', {
-        description: 'You can now upload or attach this high-res 3D render to social media posts or client proposals.'
-      });
-    } catch (err) {
-      // If direct blob download is blocked by CORS, open in new tab
-      window.open(model.image, '_blank');
-      toast.info('Opened 3D render image in a new tab for saving.');
-    } finally {
-      setIsDownloading(false);
     }
   };
 
@@ -256,24 +229,11 @@ ${shareUrl}`;
             </div>
 
             {/* Thumbnail verification note */}
-            <div className="p-3 bg-muted/70 flex items-center justify-between gap-3 text-xs">
-              <div className="flex items-center gap-2 text-muted-foreground text-[11px] leading-tight">
-                <CheckCircle2 size={15} className="text-emerald-500 shrink-0" />
-                <span>
-                  This high-resolution 3D perspective thumbnail will automatically display when shared on social networks.
-                </span>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleDownloadImage}
-                disabled={isDownloading}
-                className="h-7 px-2.5 rounded-lg text-[11px] gap-1 shrink-0 font-medium hover:bg-background"
-                title="Download 3D render file"
-              >
-                <Download size={12} />
-                <span>{isDownloading ? 'Saving...' : 'Save 3D Photo'}</span>
-              </Button>
+            <div className="p-3 bg-muted/70 flex items-center gap-2 text-xs">
+              <CheckCircle2 size={15} className="text-emerald-500 shrink-0" />
+              <span className="text-muted-foreground text-[11px] leading-tight">
+                This high-resolution 3D perspective thumbnail will automatically display when shared on social networks.
+              </span>
             </div>
           </div>
 
