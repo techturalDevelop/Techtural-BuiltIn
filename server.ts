@@ -346,19 +346,23 @@ const inMemoryInquiries: StoredInquiry[] = loadProductionInquiries();
 // POST /api/contact-message (Portal Inbox fallback)
 app.post('/api/contact-message', (req, res) => {
   try {
-    const { name, email, subject, message, phone } = req.body;
-    if (!name || !email || !message) {
+    const rawName = req.body.name || req.body.fullName || req.body.clientName;
+    const rawEmail = req.body.email || req.body.clientEmail;
+    const rawMessage = req.body.message || req.body.details;
+    const { subject, phone } = req.body;
+
+    if (!rawName || !rawEmail || !rawMessage) {
       return res.status(400).json({ error: 'Name, email, and message are required' });
     }
 
     const record: StoredInquiry = {
-      id: `msg-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      id: req.body.id || `msg-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       type: 'contact_message',
-      name: String(name).trim(),
-      email: String(email).trim().toLowerCase(),
-      phone: phone ? String(phone).trim() : undefined,
+      name: String(rawName).trim(),
+      email: String(rawEmail).trim().toLowerCase(),
+      phone: phone ? String(phone).trim() : (req.body.clientPhone ? String(req.body.clientPhone).trim() : undefined),
       subject: subject ? String(subject).trim() : 'General Project Inquiry',
-      message: String(message).trim(),
+      message: String(rawMessage).trim(),
       status: 'new',
       receivedAt: new Date().toISOString()
     };
@@ -381,16 +385,18 @@ app.post('/api/contact-message', (req, res) => {
 // POST /api/project-request (Consultation Desk fallback)
 app.post('/api/project-request', (req, res) => {
   try {
-    const { name, email, phone, projectType, service, location, budget, details } = req.body;
-    if (!name || !email) {
+    const rawName = req.body.name || req.body.fullName || req.body.clientName;
+    const rawEmail = req.body.email || req.body.clientEmail;
+    const { phone, projectType, service, location, budget, details } = req.body;
+    if (!rawName || !rawEmail) {
       return res.status(400).json({ error: 'Name and email are required' });
     }
 
     const record: StoredInquiry = {
-      id: `req-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      id: req.body.id || `req-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       type: 'project_consultation',
-      name: String(name).trim(),
-      email: String(email).trim().toLowerCase(),
+      name: String(rawName).trim(),
+      email: String(rawEmail).trim().toLowerCase(),
       phone: phone ? String(phone).trim() : 'Not provided',
       projectType: projectType || 'residential',
       service: service || 'Full Turnkey Construction',
