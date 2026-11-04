@@ -480,18 +480,7 @@ export default function Navbar() {
                   </PopoverContent>
                 </Popover>
               </div>
-            ) : (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="rounded-full gap-1.5 text-foreground hover:text-primary border border-border/80 bg-muted/50 hover:bg-muted transition-all text-xs font-semibold cursor-pointer shadow-2xs"
-                onClick={handleLogin}
-                title="Sign in with your authorized Techtural passkey"
-              >
-                <KeyRound size={13} className="text-primary" />
-                <span>Sign In</span>
-              </Button>
-            )}
+            ) : null}
             <PWAInstallButton variant="nav" />
             <Button 
               size="sm" 
@@ -680,39 +669,37 @@ export default function Navbar() {
                 <ChevronRight size={18} className="text-muted-foreground" />
               </HashLink>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  if (passkeyUser || user) {
-                    handleLogout();
-                  } else {
-                    handleLogin();
-                  }
-                }}
-                className="w-full mt-3 flex items-center justify-between p-3 rounded-xl bg-muted/50 border border-border/80 text-xs font-semibold text-foreground hover:text-primary cursor-pointer transition-colors"
-              >
-                <div className="flex items-center gap-2">
-                  <KeyRound size={14} className="text-primary" />
-                  <span>{passkeyUser ? `${passkeyUser.displayName} (${passkeyUser.role.toUpperCase()})` : 'Sign In with Passkey'}</span>
-                </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20 uppercase tracking-wider">
-                  {passkeyUser ? 'Sign Out' : 'Portal'}
-                </span>
-              </button>
-
               {passkeyUser && (
-                <Button 
-                  variant="outline"
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    setIsPortalModalOpen(true);
-                  }}
-                  className="w-full mt-2 justify-start gap-2 rounded-xl text-xs font-bold border-primary/40 text-primary bg-primary/5"
-                >
-                  <Inbox size={14} />
-                  <span>Open Admin Desk (Inquiries &amp; Quotes)</span>
-                </Button>
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      handleLogout();
+                    }}
+                    className="w-full mt-3 flex items-center justify-between p-3 rounded-xl bg-muted/50 border border-border/80 text-xs font-semibold text-foreground hover:text-primary cursor-pointer transition-colors"
+                  >
+                    <div className="flex items-center gap-2">
+                      <KeyRound size={14} className="text-primary" />
+                      <span>{passkeyUser.displayName} ({passkeyUser.role.toUpperCase()})</span>
+                    </div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-destructive/10 text-destructive border border-destructive/20 uppercase tracking-wider">
+                      Sign Out
+                    </span>
+                  </button>
+
+                  <Button 
+                    variant="outline"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      setIsPortalModalOpen(true);
+                    }}
+                    className="w-full mt-2 justify-start gap-2 rounded-xl text-xs font-bold border-primary/40 text-primary bg-primary/5"
+                  >
+                    <Inbox size={14} />
+                    <span>Open Admin Desk (Inquiries &amp; Quotes)</span>
+                  </Button>
+                </>
               )}
 
               <div className="mt-3">

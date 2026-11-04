@@ -1,6 +1,11 @@
-import { Facebook, Linkedin, MessageSquare } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Facebook, Linkedin, MessageSquare, KeyRound, Inbox, LogOut, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PWAInstallButton from '@/components/PWAInstallButton';
+import PasskeySignInModal from './PasskeySignInModal';
+import PortalInquiriesModal from './PortalInquiriesModal';
+import { getStoredPasskeyUser, logoutPasskeyUser, PasskeyUser } from '@/lib/passkeyAuth';
+import { toast } from 'sonner';
 import { 
   PRIMARY_WHATSAPP_NUMBER, 
   DISPLAY_WHATSAPP, 
@@ -14,6 +19,29 @@ import {
 } from '@/lib/communicationLinks';
 
 export default function Footer() {
+  const [passkeyUser, setPasskeyUser] = useState<PasskeyUser | null>(() => getStoredPasskeyUser());
+  const [isSignInOpen, setIsSignInOpen] = useState(false);
+  const [isPortalOpen, setIsPortalOpen] = useState(false);
+
+  useEffect(() => {
+    // Keep in sync with local storage updates across components
+    const handleStorage = () => {
+      setPasskeyUser(getStoredPasskeyUser());
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await logoutPasskeyUser();
+      setPasskeyUser(null);
+      toast.success('Signed out of Techtural portal');
+    } catch {
+      toast.error('Logout failed');
+    }
+  };
+
   return (
     <footer className="bg-background border-t border-border py-12">
       <div className="container mx-auto px-6">
@@ -120,7 +148,49 @@ export default function Footer() {
               <li><Link to="/privacy-policy" className="text-muted-foreground hover:text-primary transition-colors">Privacy Policy</Link></li>
               <li><Link to="/terms-of-use" className="text-muted-foreground hover:text-primary transition-colors">Terms of Use</Link></li>
               <li><Link to="/cookie-policy" className="text-muted-foreground hover:text-primary transition-colors">Cookie Policy</Link></li>
+              
+              {/* Personnel Sign In Relocated to Footer */}
+              <li className="pt-2">
+                {passkeyUser ? (
+                  <div className="flex flex-col gap-2 p-3 rounded-2xl bg-muted/50 border border-primary/25">
+                    <div className="flex items-center gap-1.5 text-xs text-foreground font-bold">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="truncate">{passkeyUser.displayName}</span>
+                      <span className="text-[10px] text-amber-500 font-mono uppercase font-bold">({passkeyUser.role})</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setIsPortalOpen(true)}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary text-xs font-bold transition-colors cursor-pointer border border-primary/30"
+                      >
+                        <Inbox size={12} />
+                        <span>Admin Desk</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold text-destructive hover:bg-destructive/10 transition-colors cursor-pointer"
+                      >
+                        <LogOut size={12} />
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setIsSignInOpen(true)}
+                    className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-muted/60 hover:bg-muted text-foreground hover:text-primary border border-border/70 text-xs font-semibold transition-all cursor-pointer shadow-2xs group"
+                    title="Authorized Techtural Personnel Sign In"
+                  >
+                    <KeyRound size={13} className="text-primary group-hover:scale-110 transition-transform" />
+                    <span>Personnel Sign In</span>
+                  </button>
+                )}
+              </li>
             </ul>
+
             <div className="pt-2">
               <PWAInstallButton variant="footer" />
             </div>
@@ -158,11 +228,39 @@ export default function Footer() {
             </span>
           </div>
 
-          <p className="text-xs md:text-sm text-center lg:text-right">
-            100% Papua New Guinea Owned 🇵🇬
-          </p>
+          <div className="flex items-center gap-3 text-xs md:text-sm text-center lg:text-right">
+            <span>100% Papua New Guinea Owned 🇵🇬</span>
+            <span className="text-muted-foreground/40">•</span>
+            <button
+              type="button"
+              onClick={() => {
+                if (passkeyUser) {
+                  setIsPortalOpen(true);
+                } else {
+                  setIsSignInOpen(true);
+                }
+              }}
+              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+              title="Authorized Personnel Access"
+            >
+              <KeyRound size={12} className="text-primary" />
+              <span>{passkeyUser ? 'Admin Desk' : 'Staff Sign In'}</span>
+            </button>
+          </div>
         </div>
       </div>
+
+      <PasskeySignInModal
+        isOpen={isSignInOpen}
+        onClose={() => setIsSignInOpen(false)}
+        onSuccess={(u) => setPasskeyUser(u)}
+      />
+
+      <PortalInquiriesModal
+        isOpen={isPortalOpen}
+        onClose={() => setIsPortalOpen(false)}
+        adminName={passkeyUser?.displayName || 'Gerea George'}
+      />
     </footer>
   );
 }
