@@ -95,7 +95,6 @@ export async function verifyPasskey(enteredPasskey: string): Promise<{ success: 
       }
     }
   } catch (apiErr) {
-    // Edge or static host without Express backend; proceed smoothly to native WebCrypto verification
     console.info('Edge verification fallback active:', apiErr);
   }
 
