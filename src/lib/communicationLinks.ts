@@ -16,6 +16,8 @@ export const SECONDARY_EMAIL = 'gerea.george@techturalpng.com';
 export const FACEBOOK_URL = 'https://www.facebook.com/profile.php?id=61594249310814';
 export const LINKEDIN_URL = 'https://www.linkedin.com/company/techtural-builtin/';
 
+import { submitWhatsAppInquiry } from './firebase';
+
 /**
  * Builds an openable wa.me link with encoded pre-filled text
  */
@@ -25,7 +27,7 @@ export function buildWhatsAppLink(message: string, phone: string = PRIMARY_WHATS
 }
 
 /**
- * Automatically logs WhatsApp inquiries to the backend portal desk before launching chat
+ * Automatically logs WhatsApp inquiries to the backend portal desk and Firestore before launching chat
  */
 export function logPortalWhatsAppInquiry(data: {
   modelCode?: string;
@@ -38,13 +40,10 @@ export function logPortalWhatsAppInquiry(data: {
   calculatedTotal?: number;
 }) {
   try {
-    fetch('/api/whatsapp-inquiry', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-      keepalive: true,
-    }).catch(err => console.warn('Non-fatal WhatsApp logging:', err));
-  } catch (_) {}
+    submitWhatsAppInquiry(data);
+  } catch (err) {
+    console.warn('Non-fatal WhatsApp logging:', err);
+  }
 }
 
 /**

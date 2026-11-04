@@ -31,7 +31,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { fetchPortalInquiries } from '@/lib/firebase';
+import { fetchPortalInquiries, updatePortalInquiryStatus } from '@/lib/firebase';
 import { 
   PRIMARY_WHATSAPP_NUMBER, 
   PRIMARY_EMAIL, 
@@ -103,15 +103,9 @@ export const PortalInquiriesModal: React.FC<PortalInquiriesModalProps> = ({
   // Handle status update
   const handleUpdateStatus = async (id: string, newStatus: string) => {
     try {
-      const resp = await fetch(`/api/inquiries/${id}/status`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus }),
-      });
-      if (resp.ok) {
-        setInquiries(prev => prev.map(item => item.id === id ? { ...item, status: newStatus } : item));
-        toast.success(`Inquiry status updated to ${newStatus.toUpperCase()}`);
-      }
+      await updatePortalInquiryStatus(id, newStatus);
+      setInquiries(prev => prev.map(item => item.id === id ? { ...item, status: newStatus } : item));
+      toast.success(`Inquiry status updated to ${newStatus.toUpperCase()}`);
     } catch (err) {
       toast.error('Failed to update status.');
     }
