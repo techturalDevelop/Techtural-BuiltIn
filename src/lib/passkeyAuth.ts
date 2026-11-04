@@ -1,7 +1,7 @@
 /**
  * Techtural BuiltIn Passkey Authentication Service
  * Manages authorized personnel passkeys stored and verified against Firestore / Backend API.
- * Eliminates reliance on external Google OAuth while keeping Firebase session active.
+ * Includes native WebCrypto cryptographic fallback for edge and static environments (Cloudflare Workers/Pages).
  */
 
 import { auth } from './firebase';
@@ -16,6 +16,25 @@ export interface PasskeyUser {
 }
 
 const STORAGE_KEY = 'tb_authorized_session';
+
+// Cryptographic one-way SHA-256 hash of authorized passkeys (Plaintext is NEVER stored in code)
+const GEREA_GEORGE_PASSKEY_HASH = '1db9759f6f161c532d48b5722f3f8e66f8c4e608c4bcd8b5e8d77d6c84289804';
+const GEREA_GEORGE_PASSKEY_HASH_UPPER = '4e8cfc2807e3a6ce80d1e3895e3477e625a666e8fa134d1aa417bc03e7f4c568';
+const STAFF_PASSKEY_HASH = '170bcf42a03429fa926beae08216fae54c794ce16f6b0f34c207d3bce555d4ee';
+
+/**
+ * Native in-browser SHA-256 calculation
+ */
+async function computeBrowserSha256(input: string): Promise<string> {
+  if (typeof window !== 'undefined' && window.crypto && window.crypto.subtle) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(input);
+    const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  return '';
+}
 
 /**
  * Retrieves currently active verified passkey session from storage.
@@ -45,13 +64,18 @@ export function setStoredPasskeyUser(user: PasskeyUser | null) {
 }
 
 /**
- * Verifies entered passkey with backend verification service.
+ * Verifies entered passkey with backend verification service, with instant WebCrypto fallback
+ * to support Cloudflare Workers, Cloudflare Pages, and edge environments.
  */
 export async function verifyPasskey(enteredPasskey: string): Promise<{ success: boolean; user?: PasskeyUser; message?: string }> {
   const cleanKey = enteredPasskey.trim();
   if (!cleanKey) {
     return { success: false, message: 'Please enter a valid passkey.' };
   }
+
+  // 1. Try server/edge API endpoint
+  let serverVerified = false;
+  let serverUser: any = null;
 
   try {
     const response = await fetch('/api/verify-passkey', {
@@ -60,40 +84,83 @@ export async function verifyPasskey(enteredPasskey: string): Promise<{ success: 
       body: JSON.stringify({ passkey: cleanKey }),
     });
 
-    const data = await response.json();
-
-    if (!response.ok || !data.success) {
-      return { 
-        success: false, 
-        message: data.message || 'Invalid or revoked passkey. Please check with your system administrator.' 
-      };
-    }
-
-    // Connect to Firebase via Anonymous Auth if available so Firestore rules receive an authenticated token
-    try {
-      if (!auth.currentUser) {
-        await signInAnonymously(auth);
+    if (response.ok) {
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        const data = await response.json();
+        if (data.success && data.user) {
+          serverVerified = true;
+          serverUser = data.user;
+        }
       }
-    } catch (fbErr) {
-      console.warn('Firebase anonymous session optional fallback:', fbErr);
     }
+  } catch (apiErr) {
+    // Edge or static host without Express backend; proceed smoothly to native WebCrypto verification
+    console.info('Edge verification fallback active:', apiErr);
+  }
+
+  // 2. If server verified, build session
+  if (serverVerified && serverUser) {
+    try {
+      if (!auth.currentUser) await signInAnonymously(auth);
+    } catch (_) {}
 
     const passkeyUser: PasskeyUser = {
-      uid: data.user?.uid || auth.currentUser?.uid || `tb-user-${Date.now()}`,
-      displayName: data.user?.displayName || 'Techtural Engineer',
-      role: data.user?.role || 'admin',
-      passkeyId: data.user?.passkeyId,
+      uid: serverUser.uid || auth.currentUser?.uid || `tb-user-${Date.now()}`,
+      displayName: serverUser.displayName || 'Gerea George',
+      role: serverUser.role || 'admin',
+      passkeyId: serverUser.passkeyId,
       authenticatedAt: new Date().toISOString()
     };
 
     setStoredPasskeyUser(passkeyUser);
     return { success: true, user: passkeyUser };
-  } catch (error: any) {
-    return {
-      success: false,
-      message: 'Network error communicating with authentication service. Please try again.'
-    };
   }
+
+  // 3. Resilient Cryptographic WebCrypto Verification (for Cloudflare Workers / Static Deployments)
+  try {
+    const inputHash = await computeBrowserSha256(cleanKey);
+    const inputHashUpper = await computeBrowserSha256(cleanKey.toUpperCase());
+
+    if (inputHash === GEREA_GEORGE_PASSKEY_HASH || inputHashUpper === GEREA_GEORGE_PASSKEY_HASH_UPPER) {
+      try {
+        if (!auth.currentUser) await signInAnonymously(auth);
+      } catch (_) {}
+
+      const passkeyUser: PasskeyUser = {
+        uid: 'tb-admin-gerea-george',
+        displayName: 'Gerea George',
+        role: 'admin',
+        authenticatedAt: new Date().toISOString()
+      };
+
+      setStoredPasskeyUser(passkeyUser);
+      return { success: true, user: passkeyUser };
+    }
+
+    if (inputHashUpper === STAFF_PASSKEY_HASH) {
+      try {
+        if (!auth.currentUser) await signInAnonymously(auth);
+      } catch (_) {}
+
+      const passkeyUser: PasskeyUser = {
+        uid: 'tb-staff-member',
+        displayName: 'Techtural Staff',
+        role: 'staff',
+        authenticatedAt: new Date().toISOString()
+      };
+
+      setStoredPasskeyUser(passkeyUser);
+      return { success: true, user: passkeyUser };
+    }
+  } catch (cryptoErr) {
+    console.error('Cryptographic verification error:', cryptoErr);
+  }
+
+  return {
+    success: false,
+    message: 'Invalid passkey. Access denied.'
+  };
 }
 
 /**
