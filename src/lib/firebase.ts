@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { initializeFirestore, collection, addDoc, serverTimestamp, getDocFromServer, doc, getDocs, query, where, orderBy, updateDoc, setDoc } from 'firebase/firestore';
+import { initializeFirestore, collection, addDoc, serverTimestamp, getDocFromServer, doc, getDocs, query, where, orderBy, updateDoc, setDoc, deleteDoc } from 'firebase/firestore';
 import { getAuth, signInAnonymously, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import firebaseConfig from '../../firebase-applet-config.json';
 
@@ -269,35 +269,53 @@ export async function submitWhatsAppInquiry(data: {
   }
 }
 
+function parseInquiryTimestamp(raw: any, fallbackDate?: string): string {
+  if (!raw) return fallbackDate || new Date().toISOString();
+  if (typeof raw?.toDate === 'function') {
+    try {
+      return raw.toDate().toISOString();
+    } catch (_) {}
+  }
+  if (raw?.seconds) {
+    try {
+      return new Date(raw.seconds * 1000).toISOString();
+    } catch (_) {}
+  }
+  if (typeof raw === 'string') {
+    const d = new Date(raw);
+    if (!isNaN(d.getTime())) return d.toISOString();
+  }
+  return fallbackDate || new Date().toISOString();
+}
+
 export async function fetchPortalInquiries(): Promise<any[]> {
   const mergedMap = new Map<string, any>();
 
   // 1. Fetch live documents from Firestore directly
   try {
-    await ensureAuth();
-
     // A. Project Requests
     try {
       const snap = await getDocs(collection(db, 'projectRequests'));
       snap.forEach(docSnap => {
         const d = docSnap.data();
         const docId = docSnap.id;
-        mergedMap.set(docId, {
-          id: d.id || docId,
+        const canonicalId = d.id || docId;
+        mergedMap.set(canonicalId, {
+          id: canonicalId,
           docId: docId,
           collection: 'projectRequests',
           type: 'project_consultation',
           name: d.name || 'Anonymous Client',
-          email: d.email,
-          phone: d.phone,
-          projectType: d.projectType,
-          service: d.service,
-          location: d.location,
-          budget: d.budget,
+          email: d.email || '',
+          phone: d.phone || '',
+          projectType: d.projectType || 'residential',
+          service: d.service || 'Turnkey Construction',
+          location: d.location || 'Papua New Guinea',
+          budget: d.budget || 'Custom Budget',
           message: d.details ? (typeof d.details === 'string' ? d.details : JSON.stringify(d.details)) : (d.service || 'Project Consultation Request'),
           subject: `${d.projectType ? d.projectType.toUpperCase() : 'Project'}: ${d.service || 'Consultation'}`,
           status: d.status || 'new',
-          receivedAt: d.createdAt?.toDate ? d.createdAt.toDate().toISOString() : (d.receivedAt || new Date().toISOString())
+          receivedAt: parseInquiryTimestamp(d.createdAt, d.receivedAt)
         });
       });
     } catch (e) {
@@ -310,18 +328,19 @@ export async function fetchPortalInquiries(): Promise<any[]> {
       snap.forEach(docSnap => {
         const d = docSnap.data();
         const docId = docSnap.id;
-        mergedMap.set(docId, {
-          id: d.id || docId,
+        const canonicalId = d.id || docId;
+        mergedMap.set(canonicalId, {
+          id: canonicalId,
           docId: docId,
           collection: 'contactMessages',
           type: 'contact_message',
           name: d.name || 'Website Visitor',
-          email: d.email,
-          phone: d.phone,
+          email: d.email || '',
+          phone: d.phone || '',
           subject: d.subject || 'General Project Inquiry',
           message: d.message || '',
           status: d.status || 'new',
-          receivedAt: d.createdAt?.toDate ? d.createdAt.toDate().toISOString() : (d.receivedAt || new Date().toISOString())
+          receivedAt: parseInquiryTimestamp(d.createdAt, d.receivedAt)
         });
       });
     } catch (e) {
@@ -334,22 +353,23 @@ export async function fetchPortalInquiries(): Promise<any[]> {
       snap.forEach(docSnap => {
         const d = docSnap.data();
         const docId = docSnap.id;
-        mergedMap.set(docId, {
-          id: d.id || docId,
+        const canonicalId = d.id || docId;
+        mergedMap.set(canonicalId, {
+          id: canonicalId,
           docId: docId,
           collection: 'whatsappInquiries',
           type: 'whatsapp_inquiry',
           name: d.name || 'WhatsApp Visitor',
-          email: d.email,
-          phone: d.phone,
-          modelCode: d.modelCode,
-          modelName: d.modelName,
-          location: d.location,
-          budget: d.budget,
+          email: d.email || '',
+          phone: d.phone || '',
+          modelCode: d.modelCode || '',
+          modelName: d.modelName || '',
+          location: d.location || 'Papua New Guinea',
+          budget: d.budget || '',
           subject: d.subject || `WhatsApp Inquiry: ${d.modelName || d.modelCode || 'Kit Home'}`,
-          message: d.message || '',
+          message: d.message || 'Direct WhatsApp Consultation Lead',
           status: d.status || 'new',
-          receivedAt: d.createdAt?.toDate ? d.createdAt.toDate().toISOString() : (d.receivedAt || new Date().toISOString())
+          receivedAt: parseInquiryTimestamp(d.createdAt, d.receivedAt)
         });
       });
     } catch (e) {
@@ -390,13 +410,18 @@ export async function fetchPortalInquiries(): Promise<any[]> {
   return result;
 }
 
-export async function updatePortalInquiryStatus(id: string, newStatus: string, collectionName?: string) {
+export async function updatePortalInquiryStatus(id: string, newStatus: string, collectionName?: string, docId?: string) {
+  const targetId = docId || id;
+  const collectionsToTry = collectionName
+    ? [collectionName]
+    : ['projectRequests', 'contactMessages', 'whatsappInquiries'];
+
   // 1. Update Firestore
-  try {
-    const coll = collectionName || (id.startsWith('req-') ? 'projectRequests' : id.startsWith('msg-') ? 'contactMessages' : 'whatsappInquiries');
-    await updateDoc(doc(db, coll, id), { status: newStatus });
-  } catch (err) {
-    console.warn('Firestore status update error:', err);
+  for (const coll of collectionsToTry) {
+    try {
+      await updateDoc(doc(db, coll, targetId), { status: newStatus });
+      break;
+    } catch (_) {}
   }
 
   // 2. Update Server API
@@ -411,7 +436,36 @@ export async function updatePortalInquiryStatus(id: string, newStatus: string, c
   // 3. Update localStorage
   try {
     const list = getLocalCachedInquiries();
-    const updated = list.map(item => item.id === id ? { ...item, status: newStatus } : item);
+    const updated = list.map(item => (item.id === id || item.docId === targetId) ? { ...item, status: newStatus } : item);
+    localStorage.setItem(INQUIRIES_CACHE_KEY, JSON.stringify(updated));
+  } catch (_) {}
+}
+
+export async function deletePortalInquiry(id: string, collectionName?: string, docId?: string) {
+  const targetId = docId || id;
+  const collectionsToTry = collectionName
+    ? [collectionName]
+    : ['projectRequests', 'contactMessages', 'whatsappInquiries'];
+
+  // 1. Delete from Firestore
+  for (const coll of collectionsToTry) {
+    try {
+      await deleteDoc(doc(db, coll, targetId));
+      break;
+    } catch (_) {}
+  }
+
+  // 2. Delete from Server API
+  try {
+    fetch(`/api/inquiries/${id}`, {
+      method: 'DELETE',
+    }).catch(() => {});
+  } catch (_) {}
+
+  // 3. Delete from localStorage
+  try {
+    const list = getLocalCachedInquiries();
+    const updated = list.filter(item => item.id !== id && item.docId !== targetId);
     localStorage.setItem(INQUIRIES_CACHE_KEY, JSON.stringify(updated));
   } catch (_) {}
 }

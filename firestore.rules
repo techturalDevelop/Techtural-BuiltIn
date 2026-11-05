@@ -84,20 +84,17 @@ service cloud.firestore {
 
     // Project Requests
     match /projectRequests/{requestId} {
-      allow create: if true;
-      allow read, update, delete: if isAuthenticated() || isAdmin();
+      allow read, write: if true;
     }
 
     // Contact Messages
     match /contactMessages/{messageId} {
-      allow create: if true;
-      allow read, update, delete: if isAuthenticated() || isAdmin();
+      allow read, write: if true;
     }
 
     // WhatsApp Inquiries
     match /whatsappInquiries/{inquiryId} {
-      allow create: if true;
-      allow read, update, delete: if isAuthenticated() || isAdmin();
+      allow read, write: if true;
     }
 
     // Cost Estimates

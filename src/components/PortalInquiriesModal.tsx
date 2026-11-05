@@ -25,13 +25,14 @@ import {
   Calculator,
   Send,
   Building,
-  AlertCircle
+  AlertCircle,
+  Trash2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { fetchPortalInquiries, updatePortalInquiryStatus } from '@/lib/firebase';
+import { fetchPortalInquiries, updatePortalInquiryStatus, deletePortalInquiry } from '@/lib/firebase';
 import { 
   PRIMARY_WHATSAPP_NUMBER, 
   PRIMARY_EMAIL, 
@@ -101,13 +102,28 @@ export const PortalInquiriesModal: React.FC<PortalInquiriesModalProps> = ({
   if (!isOpen) return null;
 
   // Handle status update
-  const handleUpdateStatus = async (id: string, newStatus: string) => {
+  const handleUpdateStatus = async (item: any, newStatus: string) => {
     try {
-      await updatePortalInquiryStatus(id, newStatus);
-      setInquiries(prev => prev.map(item => item.id === id ? { ...item, status: newStatus } : item));
+      await updatePortalInquiryStatus(item.id, newStatus, item.collection, item.docId);
+      setInquiries(prev => prev.map(i => (i.id === item.id || (i.docId && i.docId === item.docId)) ? { ...i, status: newStatus } : i));
       toast.success(`Inquiry status updated to ${newStatus.toUpperCase()}`);
     } catch (err) {
       toast.error('Failed to update status.');
+    }
+  };
+
+  // Handle inquiry deletion
+  const handleDeleteInquiry = async (item: any) => {
+    const displayName = item.name || 'this client';
+    if (!window.confirm(`Delete inquiry from "${displayName}"? This will permanently remove the record.`)) {
+      return;
+    }
+    try {
+      await deletePortalInquiry(item.id, item.collection, item.docId);
+      setInquiries(prev => prev.filter(i => i.id !== item.id && (!item.docId || i.docId !== item.docId)));
+      toast.success('Inquiry permanently removed.');
+    } catch (err) {
+      toast.error('Failed to delete inquiry.');
     }
   };
 
@@ -419,12 +435,12 @@ Managing Director & Principal | Techtural BuiltIn PNG`;
                           )}
                         </div>
 
-                        {/* Status Switcher */}
+                        {/* Status Switcher & Delete Action */}
                         <div className="flex items-center gap-2">
                           <span className="text-[10px] uppercase font-bold text-muted-foreground">Status:</span>
                           <select
                             value={inq.status || 'new'}
-                            onChange={(e) => handleUpdateStatus(inq.id, e.target.value)}
+                            onChange={(e) => handleUpdateStatus(inq, e.target.value)}
                             className="text-xs font-bold px-2.5 py-1 rounded-lg border border-border bg-background focus:border-primary outline-none cursor-pointer"
                           >
                             <option value="new">🟡 New</option>
@@ -433,7 +449,14 @@ Managing Director & Principal | Techtural BuiltIn PNG`;
                             <option value="contacted">🟢 Contacted</option>
                             <option value="archived">⚪ Archived</option>
                           </select>
-                          <span className="text-[11px] text-muted-foreground ml-2">
+                          <button
+                            onClick={() => handleDeleteInquiry(inq)}
+                            title="Delete Inquiry"
+                            className="p-1 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                          <span className="text-[11px] text-muted-foreground ml-1">
                             {new Date(inq.receivedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(inq.receivedAt).toLocaleDateString()}
                           </span>
                         </div>

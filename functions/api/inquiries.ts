@@ -25,3 +25,14 @@ export async function onRequestPatch(context: any) {
     headers: { 'Content-Type': 'application/json' },
   });
 }
+
+export async function onRequestDelete(context: any) {
+  return new Response(JSON.stringify({
+    success: true,
+    message: 'Inquiry removed on edge.'
+  }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+

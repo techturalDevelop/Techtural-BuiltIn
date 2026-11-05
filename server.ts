@@ -341,7 +341,7 @@ function saveProductionInquiries(list: StoredInquiry[]) {
 }
 
 // Strictly live production inquiries (starts completely empty, zero demo data)
-const inMemoryInquiries: StoredInquiry[] = loadProductionInquiries();
+let inMemoryInquiries: StoredInquiry[] = loadProductionInquiries();
 
 // POST /api/contact-message (Portal Inbox fallback)
 app.post('/api/contact-message', (req, res) => {
@@ -487,6 +487,20 @@ app.patch('/api/inquiries/:id/status', (req, res) => {
     return res.status(500).json({ error: 'Failed to update status.' });
   }
 });
+
+// DELETE /api/inquiries/:id (Remove inquiry record)
+app.delete('/api/inquiries/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const initialLen = inMemoryInquiries.length;
+    inMemoryInquiries = inMemoryInquiries.filter(item => item.id !== id);
+    saveProductionInquiries(inMemoryInquiries);
+    return res.status(200).json({ success: true, removed: initialLen - inMemoryInquiries.length });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to delete inquiry.' });
+  }
+});
+
 
 // POST /api/verify-passkey (Authorized Personnel Passkey Verification)
 app.post('/api/verify-passkey', (req, res) => {
