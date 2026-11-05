@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Map as MapIcon, Globe, Layers, Navigation } from 'lucide-react';
 import ProjectMap from '@/components/ProjectMap';
 

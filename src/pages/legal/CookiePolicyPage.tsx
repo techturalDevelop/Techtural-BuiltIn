@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Cookie, Info, Settings, ShieldCheck } from 'lucide-react';
 
 export default function CookiePolicyPage() {

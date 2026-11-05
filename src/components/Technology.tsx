@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Cloud, LayoutDashboard, BarChart3, Share2, Database, ShieldCheck } from 'lucide-react';
 
 const techFeatures = [

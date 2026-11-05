@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Camera, Sparkles, ArrowRight } from 'lucide-react';
 import BeforeAfterSlider from '@/components/BeforeAfterSlider';
 import { Button, buttonVariants } from '@/components/ui/button';

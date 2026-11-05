@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

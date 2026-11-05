@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 import { ExternalLink, ChevronLeft, ChevronRight, X, Maximize2, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';

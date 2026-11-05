@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, Clock, CheckCircle2, MessageSquare, ExternalLink, Facebook, Linkedin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

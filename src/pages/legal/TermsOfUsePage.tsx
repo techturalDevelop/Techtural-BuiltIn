@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Gavel, Scale, AlertCircle, CheckCircle } from 'lucide-react';
 
 export default function TermsOfUsePage() {

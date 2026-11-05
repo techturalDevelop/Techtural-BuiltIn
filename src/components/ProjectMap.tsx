@@ -4,7 +4,7 @@ import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MapPin, Filter, ExternalLink, Calendar, Building2, Map as MapIcon, ChevronLeft, ChevronRight, X, Sparkles, Navigation, Compass, Loader2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
