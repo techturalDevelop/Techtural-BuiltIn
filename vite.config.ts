@@ -114,9 +114,13 @@ export default defineConfig(({mode}) => {
     build: {
       chunkSizeWarningLimit: 1200,
       rollupOptions: {
+        maxParallelFileOps: 16,
         output: {
           manualChunks(id) {
             if (id.includes('node_modules')) {
+              if (id.includes('lucide-react')) {
+                return 'vendor-icons';
+              }
               if (id.includes('three') || id.includes('@react-three')) {
                 return 'vendor-three';
               }
