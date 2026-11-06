@@ -198,7 +198,7 @@ export const CONTAINER_HOMES_DATA: ProductPlaceholder[] = [
       'Overhead tropical fly-roof frame reducing direct sun heat load by 80%'
     ],
     recommendedUse: 'Suburban 2-bed family home, plantation executive residence',
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/Tiny%20Homes%20%26%20Container%20Homes/TinyHomes-Container-TBWeb_Publish/Container%20Tiny%20Homes-003.png',
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/Tiny%20Homes%20%26%20Container%20Homes/Container%20Homes/CH-03_Twin-L%2040ft%20Modular%20Residence.png',
     blueprintPrice: 4200,
     boqBomPrice: 2800,
     kitsetBasePrice: 105000,
@@ -698,7 +698,7 @@ export const COMMERCIAL_WAREHOUSES_DATA: ProductPlaceholder[] = [
       'High-bay LED lighting and natural daylight polycarbonate roof skylight strips'
     ],
     recommendedUse: 'General freight warehousing, metal fabrication workshop, equipment depot',
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/Commercial%20Warehouse-TBWeb_Publish/WArehouse%201.png',
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/Commercial%20Warehouse-TBWeb_Publish/WH-01_Apex%20Span%20Industrial%20Warehouse.png',
     blueprintPrice: 15000,
     boqBomPrice: 9000,
     kitsetBasePrice: 480000,
@@ -750,7 +750,7 @@ export const COMMERCIAL_WAREHOUSES_DATA: ProductPlaceholder[] = [
       'Food-grade stainless steel drainage gutters and anti-microbial floor screed'
     ],
     recommendedUse: 'Coffee/cocoa export depot, seafood cold storage, supermarket perishables',
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/Commercial%20Warehouse-TBWeb_Publish/WArehouse%203.png',
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/Commercial%20Warehouse-TBWeb_Publish/WH-03_Cold%20Storage%20%26%20Agri-Processing%20Depot.png',
     blueprintPrice: 24000,
     boqBomPrice: 14000,
     kitsetBasePrice: 890000,
@@ -776,7 +776,7 @@ export const COMMERCIAL_WAREHOUSES_DATA: ProductPlaceholder[] = [
       'High-security perimeter fencing with automated access control boom gate'
     ],
     recommendedUse: 'Commercial investment park, SME contractor units, multi-tenant industrial park',
-    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/Commercial%20Warehouse-TBWeb_Publish/WArehouse%204Shed.png',
+    image: 'https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/Commercial%20Warehouse-TBWeb_Publish/WH-04_Cold%20Storage%20%26%20Agri-Processing%20Depot%20(800%20m%C2%B2).jpg',
     blueprintPrice: 32000,
     boqBomPrice: 19000,
     kitsetBasePrice: 1450000,
