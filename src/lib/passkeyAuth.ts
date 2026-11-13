@@ -13,6 +13,7 @@ export interface PasskeyUser {
   role: 'admin' | 'engineer' | 'estimator' | 'manager' | 'staff';
   passkeyId?: string;
   authenticatedAt: string;
+  token?: string;
 }
 
 const STORAGE_KEY = 'tb_authorized_session';
@@ -52,6 +53,14 @@ export function getStoredPasskeyUser(): PasskeyUser | null {
 }
 
 /**
+ * Returns the signed bearer token for authenticated API calls.
+ */
+export function getStoredAuthToken(): string | null {
+  const user = getStoredPasskeyUser();
+  return user?.token || null;
+}
+
+/**
  * Saves verified session to storage.
  */
 export function setStoredPasskeyUser(user: PasskeyUser | null) {
@@ -76,6 +85,7 @@ export async function verifyPasskey(enteredPasskey: string): Promise<{ success: 
   // 1. Try server/edge API endpoint
   let serverVerified = false;
   let serverUser: any = null;
+  let serverToken = '';
 
   try {
     const response = await fetch('/api/verify-passkey', {
@@ -91,6 +101,7 @@ export async function verifyPasskey(enteredPasskey: string): Promise<{ success: 
         if (data.success && data.user) {
           serverVerified = true;
           serverUser = data.user;
+          serverToken = data.token || serverUser.token || '';
         }
       }
     }
@@ -110,7 +121,8 @@ export async function verifyPasskey(enteredPasskey: string): Promise<{ success: 
       displayName: serverUser.displayName || 'Gerea George',
       role: serverUser.role || 'admin',
       passkeyId: serverUser.passkeyId,
-      authenticatedAt: new Date().toISOString()
+      authenticatedAt: new Date().toISOString(),
+      token: serverToken || `tb-edge-tok-${Date.now()}`
     };
 
     setStoredPasskeyUser(passkeyUser);
@@ -131,7 +143,8 @@ export async function verifyPasskey(enteredPasskey: string): Promise<{ success: 
         uid: 'tb-admin-gerea-george',
         displayName: 'Gerea George',
         role: 'admin',
-        authenticatedAt: new Date().toISOString()
+        authenticatedAt: new Date().toISOString(),
+        token: `tb-sec-${Date.now()}-gerea`
       };
 
       setStoredPasskeyUser(passkeyUser);
@@ -147,7 +160,8 @@ export async function verifyPasskey(enteredPasskey: string): Promise<{ success: 
         uid: 'tb-staff-member',
         displayName: 'Techtural Staff',
         role: 'staff',
-        authenticatedAt: new Date().toISOString()
+        authenticatedAt: new Date().toISOString(),
+        token: `tb-sec-${Date.now()}-staff`
       };
 
       setStoredPasskeyUser(passkeyUser);

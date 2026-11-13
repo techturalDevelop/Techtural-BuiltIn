@@ -156,15 +156,7 @@ export default function About() {
             {/* Staff 1: Mr. Gerea George */}
             <div className="p-6 sm:p-8 rounded-3xl bg-card border border-border/80 hover:border-primary/50 transition-all flex flex-col justify-between shadow-sm hover:shadow-md group relative overflow-hidden">
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 mb-5">
-                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden bg-primary/10 shrink-0 border-2 border-border shadow-md group-hover:border-primary/50 group-hover:scale-[1.02] transition-all duration-300">
-                    <img 
-                      src="https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/Portfolio%20ID%26%20About%20Info/GV_Professional%20Passport%20Portrait.png" 
-                      alt="Mr. Gerea George" 
-                      className="w-full h-full object-cover object-top"
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
+                <div className="mb-5">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1.5">
                       <Badge variant="outline" className="bg-primary/10 text-primary border-primary/25 text-[10px] font-mono uppercase tracking-wider font-semibold">
@@ -208,15 +200,7 @@ export default function About() {
             {/* Staff 2: Mr. Neil Maino */}
             <div className="p-6 sm:p-8 rounded-3xl bg-card border border-border/80 hover:border-primary/50 transition-all flex flex-col justify-between shadow-sm hover:shadow-md group relative overflow-hidden">
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 mb-5">
-                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden bg-primary/10 shrink-0 border-2 border-border shadow-md group-hover:border-primary/50 group-hover:scale-[1.02] transition-all duration-300">
-                    <img 
-                      src="https://pub-9f2543783aca40a1995960e1c96f77c2.r2.dev/Portfolio%20ID%26%20About%20Info/NM_Professional%20Passport%20Portrait.jpg" 
-                      alt="Mr. Neil Maino" 
-                      className="w-full h-full object-cover object-top"
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
+                <div className="mb-5">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1.5">
                       <Badge variant="outline" className="bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/25 text-[10px] font-mono uppercase tracking-wider font-semibold">

@@ -288,6 +288,19 @@ function parseInquiryTimestamp(raw: any, fallbackDate?: string): string {
   return fallbackDate || new Date().toISOString();
 }
 
+function getAuthHeaders(): Record<string, string> {
+  try {
+    const raw = typeof window !== 'undefined' ? localStorage.getItem('tb_authorized_session') : null;
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed?.token) {
+        return { 'Authorization': `Bearer ${parsed.token}` };
+      }
+    }
+  } catch (_) {}
+  return {};
+}
+
 export async function fetchPortalInquiries(): Promise<any[]> {
   const mergedMap = new Map<string, any>();
 
@@ -381,7 +394,10 @@ export async function fetchPortalInquiries(): Promise<any[]> {
 
   // 2. Fetch from backend / Cloudflare API
   try {
-    const res = await fetch('/api/inquiries');
+    const authHeaders = getAuthHeaders();
+    const res = await fetch('/api/inquiries', {
+      headers: authHeaders
+    });
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data.inquiries)) {
@@ -426,9 +442,10 @@ export async function updatePortalInquiryStatus(id: string, newStatus: string, c
 
   // 2. Update Server API
   try {
+    const authHeaders = getAuthHeaders();
     fetch(`/api/inquiries/${id}/status`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...authHeaders },
       body: JSON.stringify({ status: newStatus })
     }).catch(() => {});
   } catch (_) {}
@@ -457,8 +474,10 @@ export async function deletePortalInquiry(id: string, collectionName?: string, d
 
   // 2. Delete from Server API
   try {
+    const authHeaders = getAuthHeaders();
     fetch(`/api/inquiries/${id}`, {
       method: 'DELETE',
+      headers: authHeaders
     }).catch(() => {});
   } catch (_) {}
 

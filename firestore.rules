@@ -39,8 +39,8 @@ service cloud.firestore {
              validString('name', 150) &&
              isValidEmail(request.resource.data.email) &&
              (!('phone' in request.resource.data) || (request.resource.data.phone is string && request.resource.data.phone.size() <= 100)) &&
-             (!('details' in request.resource.data) || request.resource.data.details is map) &&
-             (request.resource.data.status == 'pending') &&
+             (!('details' in request.resource.data) || request.resource.data.details is map || request.resource.data.details is string) &&
+             (request.resource.data.status in ['new', 'pending']) &&
              request.resource.data.createdAt is timestamp;
     }
 
@@ -72,29 +72,40 @@ service cloud.firestore {
              (!('userId' in request.resource.data) || (isAuthenticated() && request.resource.data.userId == request.auth.uid));
     }
 
+    function isValidWhatsAppInquiry() {
+      return request.resource.data.type == 'whatsapp_inquiry' &&
+             validString('message', 5000) &&
+             (!('email' in request.resource.data) || request.resource.data.email == '' || isValidEmail(request.resource.data.email)) &&
+             request.resource.data.createdAt is timestamp;
+    }
+
     // ===============================================================
     // Rules
     // ===============================================================
 
     function isAdmin() {
       return isAuthenticated() && 
-             (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' || 
-              (request.auth.token.email == "techtural782@gmail.com" && request.auth.token.email_verified == true));
+             ((request.auth.token.email == "techtural782@gmail.com" && request.auth.token.email_verified == true) ||
+              (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+               get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'));
     }
 
-    // Project Requests
+    // Project Requests (Public create with strict schema; read/update/delete restricted to admins)
     match /projectRequests/{requestId} {
-      allow read, write: if true;
+      allow create: if isValidProjectRequest();
+      allow read, update, delete: if isAdmin();
     }
 
-    // Contact Messages
+    // Contact Messages (Public create with strict schema; read/update/delete restricted to admins)
     match /contactMessages/{messageId} {
-      allow read, write: if true;
+      allow create: if isValidContactMessage();
+      allow read, update, delete: if isAdmin();
     }
 
-    // WhatsApp Inquiries
+    // WhatsApp Inquiries (Public create with strict schema; read/update/delete restricted to admins)
     match /whatsappInquiries/{inquiryId} {
-      allow read, write: if true;
+      allow create: if isValidWhatsAppInquiry();
+      allow read, update, delete: if isAdmin();
     }
 
     // Cost Estimates
