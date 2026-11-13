@@ -34,11 +34,26 @@ import PrivacyPolicyPage from '@/pages/legal/PrivacyPolicyPage';
 import TermsOfUsePage from '@/pages/legal/TermsOfUsePage';
 import CookiePolicyPage from '@/pages/legal/CookiePolicyPage';
 import ShareRedirectPage from '@/pages/ShareRedirectPage';
+import FlagshipIntroSlideshow from '@/components/FlagshipIntroSlideshow';
 
-function HomePage() {
+const INTRO_SESSION_KEY = 'tb_flagship_intro_seen';
+
+function shouldShowIntroInitially(): boolean {
+  if (typeof window === 'undefined') return false;
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('intro') === '1') return true;
+  if (window.location.pathname !== '/') return false;
+  try {
+    return sessionStorage.getItem(INTRO_SESSION_KEY) !== '1';
+  } catch {
+    return true;
+  }
+}
+
+function HomePage({ onReturnToWelcome }: { onReturnToWelcome: () => void }) {
   return (
     <>
-      <Hero />
+      <Hero onReturnToWelcome={onReturnToWelcome} />
       <About />
       <Services />
       <WorkspaceTools />
@@ -52,6 +67,16 @@ function HomePage() {
 
 export default function App() {
   const [isBypassed, setIsBypassed] = useState(() => isMaintenanceBypassed());
+  const [showFlagshipIntro, setShowFlagshipIntro] = useState(() => shouldShowIntroInitially());
+
+  const handleCompleteIntro = () => {
+    try {
+      sessionStorage.setItem(INTRO_SESSION_KEY, '1');
+    } catch {
+      // Ignore storage failures
+    }
+    setShowFlagshipIntro(false);
+  };
 
   const handleExitPreview = () => {
     setMaintenanceBypass(false);
@@ -71,6 +96,9 @@ export default function App() {
   return (
     <Router>
       <ErrorBoundary>
+        {showFlagshipIntro && (
+          <FlagshipIntroSlideshow onComplete={handleCompleteIntro} />
+        )}
         {MAINTENANCE_CONFIG.enabled && isBypassed && (
           <div className="bg-amber-500 text-slate-950 px-4 py-2 text-xs font-semibold flex flex-wrap items-center justify-between gap-2 sticky top-0 z-50 shadow-md">
             <div className="flex items-center gap-2">
@@ -90,7 +118,7 @@ export default function App() {
           <Navbar />
           <main className="flex-grow">
             <Routes>
-              <Route path="/" element={<HomePage />} />
+              <Route path="/" element={<HomePage onReturnToWelcome={() => setShowFlagshipIntro(true)} />} />
               <Route path="/projects" element={<ProjectsPage />} />
               <Route path="/estimator" element={<EstimatorPage />} />
               <Route path="/timeline" element={<TimelinePage />} />

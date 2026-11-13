@@ -35,7 +35,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { auth, logout } from '@/lib/firebase';
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 import { toast } from 'sonner';
-import PWAInstallButton from '@/components/PWAInstallButton';
 import { getStoredPasskeyUser, logoutPasskeyUser, PasskeyUser } from '@/lib/passkeyAuth';
 
 import { Link, useLocation } from 'react-router-dom';
@@ -481,7 +480,6 @@ export default function Navbar() {
                 </Popover>
               </div>
             ) : null}
-            <PWAInstallButton variant="nav" />
             <Button 
               size="sm" 
               className="rounded-full px-6"
@@ -701,10 +699,6 @@ export default function Navbar() {
                   </Button>
                 </>
               )}
-
-              <div className="mt-3">
-                <PWAInstallButton variant="banner" />
-              </div>
 
               <Button 
                 className="w-full mt-3 rounded-xl py-6 text-base font-bold"

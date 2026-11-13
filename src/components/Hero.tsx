@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Shield, Zap, Calculator } from 'lucide-react';
+import { ArrowRight, Shield, Zap, Calculator, RotateCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import ProjectDiscoveryModal from './ProjectDiscoveryModal';
 
-export default function Hero() {
+interface HeroProps {
+  onReturnToWelcome?: () => void;
+}
+
+export default function Hero({ onReturnToWelcome }: HeroProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -95,6 +99,25 @@ export default function Hero() {
                 </Button>
               </Link>
             </motion.div>
+
+            {onReturnToWelcome && (
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, y: 12 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+                className="mt-5"
+              >
+                <button
+                  type="button"
+                  onClick={onReturnToWelcome}
+                  className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2 rounded-lg border border-border/80 bg-card/60 hover:bg-card hover:border-primary/40 text-sm font-medium text-foreground/80 hover:text-primary transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                >
+                  <RotateCcw size={15} />
+                  <span>Return to Welcome Screen · 10 Flagship Kit Homes</span>
+                </button>
+              </motion.div>
+            )}
 
             <motion.div 
               variants={{
