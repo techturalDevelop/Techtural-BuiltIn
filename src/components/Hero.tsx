@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Shield, Zap, Calculator, RotateCcw } from 'lucide-react';
+import { ArrowRight, Zap, Calculator, RotateCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import ProjectDiscoveryModal from './ProjectDiscoveryModal';
+import { HeroBackgroundGeometry } from './HeroArchitecturalAnimation';
+import TechturalArchitecturalStage from './three/TechturalArchitecturalStage';
 
 interface HeroProps {
   onReturnToWelcome?: () => void;
@@ -13,22 +15,12 @@ export default function Hero({ onReturnToWelcome }: HeroProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-background">
-      {/* Background Elements */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[100px]" />
-        <div 
-          className="absolute inset-0 opacity-[0.03]" 
-          style={{ 
-            backgroundImage: 'radial-gradient(circle at 2px 2px, var(--primary) 1px, transparent 0)',
-            backgroundSize: '40px 40px'
-          }} 
-        />
-      </div>
+    <section id="home" className="relative min-h-screen flex items-center pt-24 pb-14 lg:py-20 overflow-hidden bg-background">
+      {/* Background Architectural & Geometric Animations */}
+      <HeroBackgroundGeometry />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 items-start">
+        <div className="grid lg:grid-cols-[0.95fr_1.15fr] gap-10 lg:gap-12 items-center">
           <motion.div
             initial="hidden"
             animate="visible"
@@ -144,35 +136,12 @@ export default function Hero({ onReturnToWelcome }: HeroProps) {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="relative hidden lg:block max-w-md ml-auto lg:mt-16"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.85, delay: 0.15 }}
+            className="relative w-full"
           >
-            <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl border border-border/50 aspect-square">
-              <img 
-                src="https://pub-d244eff0ad524eccbaae907a70af6b3d.r2.dev/techtural-builtin/techtural%20builtin_logo25.png" 
-                alt="Modern Architecture" 
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6 p-4 bg-white/10 backdrop-blur-md rounded-xl border border-white/20">
-                <div className="flex items-center gap-3 mb-1">
-                  <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
-                    <Shield size={16} />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-white text-sm">Quality Guaranteed</h4>
-                    <p className="text-[10px] text-white/70">International standards, local expertise.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Decorative elements */}
-            <div className="absolute -top-6 -right-6 w-32 h-32 bg-primary/20 rounded-full blur-3xl" />
-            <div className="absolute -bottom-6 -left-6 w-48 h-48 bg-primary/10 rounded-full blur-3xl" />
+            <TechturalArchitecturalStage />
           </motion.div>
         </div>
       </div>
